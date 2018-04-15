@@ -79,31 +79,6 @@ public class CustomAdapter extends ArrayAdapter<NewsData> {
         return DateFormat.getTimeInstance(DateFormat.SHORT).format(time);
     }
 
-    /*    private String mergeDateTime(Date date, Date time) {
-            Calendar calendarA = Calendar.getInstance();
-            calendarA.setTime(date);
-            Calendar calendarB = Calendar.getInstance();
-            calendarB.setTime(time);
-
-            calendarA.set(Calendar.HOUR_OF_DAY, calendarB.get(Calendar.HOUR_OF_DAY));
-            calendarA.set(Calendar.MINUTE, calendarB.get(Calendar.MINUTE));
-            calendarA.set(Calendar.SECOND, calendarB.get(Calendar.SECOND));
-            calendarA.set(Calendar.MILLISECOND, calendarB.get(Calendar.MILLISECOND));
-
-            Date dateTime = calendarA.getTime();
-
-
-            Long timeInMills = calendarA.getTimeInMillis();
-
-            long now = System.currentTimeMillis();
-
-            CharSequence ago = DateUtils.getRelativeTimeSpanString(timeInMills, now, DateUtils.HOUR_IN_MILLIS);
-
-            Log.i("TimeInMillis", ago.toString());
-
-            return dateTime.toString();
-        }
-    */
     private String getRelativeTime(Long timeInMillis) {
 
         Long now = System.currentTimeMillis();
