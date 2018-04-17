@@ -2,4 +2,7 @@
     <string name="app_name">The Guardian News</string>
     <string name="no_news">No News found.</string>
     <string name="no_network">No Internet connection.</string>
+    <string name="tab_text_1">World</string>
+    <string name="tab_text_2">Politics</string>
+    <string name="tab_text_3">Sports</string>
 </resources>

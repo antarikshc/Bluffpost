@@ -1,101 +1,67 @@
 package com.antarikshc.theguardiannews;
 
 import android.animation.LayoutTransition;
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.Loader;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
+public class MainActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = MainActivity.class.getName();
-
-    /**
-     * URL to fetch data
-     **/
-    private static Uri baseUri = null;
-    Uri.Builder uriBuilder;
 
     /**
      * API KEY
      **/
     private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
 
-    //Books loaded ID, default = 1 currently using single Loader
-    private static int NEWS_LOADER_ID = 1;
-
     /**
      * global declarations
      **/
-    RelativeLayout rootLayout;
-    ListView newsListView;
-    private CustomAdapter customAdapter;
-    LoaderManager loaderManager;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+
     SearchView searchView;
     LinearLayout searchBar;
     MenuItem item;
-    private TextView EmptyStateTextView;
-    ProgressBar loadSpin;
+
+    WorldFragment tab1;
+    PoliticsFragment tab2;
+    SportsFragment tab3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rootLayout = findViewById(R.id.root_layout);
-        newsListView = findViewById(R.id.newsList);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        newsListView.animate().alpha(0.1f).setDuration(400);
+        TabLayout tabLayout = findViewById(R.id.tabs);
 
-        //initiate CustomAdapter and set it for newsListView
-        customAdapter = new CustomAdapter(getApplicationContext(), new ArrayList<NewsData>());
-        newsListView.setAdapter(customAdapter);
-
-        //user interactive views
-        loadSpin = findViewById(R.id.loadSpin);
-        EmptyStateTextView = findViewById(R.id.emptyView);
-
-        baseUri = Uri.parse("https://content.guardianapis.com/search");
-        uriBuilder = baseUri.buildUpon();
-
-        uriBuilder.appendQueryParameter("tags", "international");
-        uriBuilder.appendQueryParameter("format", "json");
-        uriBuilder.appendQueryParameter("page-size", "8");
-        uriBuilder.appendQueryParameter("from-date", "2017-03-01");
-        uriBuilder.appendQueryParameter("show-fields", "thumbnail,headline");
-        uriBuilder.appendQueryParameter("order-by", "newest");
-        uriBuilder.appendQueryParameter("api-key", API_KEY);
-
-        //set empty text view for a proper msg to user
-        newsListView.setEmptyView(EmptyStateTextView);
-
-        loaderManager = getLoaderManager();
-
-        boolean netConnection = checkNet();
-        if (netConnection) {
-            //we need to call Loader in onCreate
-            //else it won't persist through orientations
-            executeLoader();
-        } else {
-            EmptyStateTextView.setText(R.string.no_network);
-            loadSpin.setVisibility(View.GONE);
-        }
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
     }
 
@@ -116,41 +82,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public boolean onQueryTextSubmit(String query) {
 
                 item.collapseActionView();
-                newsListView.animate().alpha(0.1f).setDuration(400);
 
                 //Clear focus so that search bar can be translated back up top
                 searchView.setQuery("", false);
                 searchView.clearFocus();
                 searchBar.clearFocus();
 
-                //remove the Empty State msg to make room for spinner
-                EmptyStateTextView.setText("");
-
-                //this will spin till View.GONE is called at onLoadFinished
-                loadSpin.setVisibility(View.VISIBLE);
-
-                //build Uri
-                baseUri = Uri.parse("https://content.guardianapis.com/search");
-                uriBuilder = baseUri.buildUpon();
+                //create URL for the search query
+                Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
+                Uri.Builder uriBuilder = baseUri.buildUpon();
 
                 uriBuilder.appendQueryParameter("q", query);
                 uriBuilder.appendQueryParameter("format", "json");
                 uriBuilder.appendQueryParameter("page-size", "8");
-                uriBuilder.appendQueryParameter("from-date", "2016-01-01");
+                uriBuilder.appendQueryParameter("from-date", "2017-01-01");
                 uriBuilder.appendQueryParameter("show-fields", "thumbnail,headline");
                 uriBuilder.appendQueryParameter("api-key", API_KEY);
 
-                //destroy previous loader and increment the loader id
-                destroyLoader(NEWS_LOADER_ID);
-                NEWS_LOADER_ID += 1;
-                executeLoader();
+                Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
+                searchIntent.putExtra("title", query);
+                searchIntent.putExtra("url", uriBuilder.toString());
+                startActivity(searchIntent);
 
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    searchView.setIconified(true);
+                }
             }
         });
 
@@ -166,46 +134,39 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             searchView.clearFocus();
             searchBar.clearFocus();
         }
-        rootLayout.requestFocus();
-
-        newsListView.setVisibility(View.VISIBLE);
+        mViewPager.requestFocus();
     }
 
-    //Initiate and destroy loader methods to be called after search is submitted
-    private void executeLoader() {
-        loaderManager.initLoader(NEWS_LOADER_ID, null, this);
-    }
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private void destroyLoader(int id) {
-        loaderManager.destroyLoader(id);
-    }
+        SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-    @Override
-    public Loader<ArrayList<NewsData>> onCreateLoader(int id, Bundle args) {
-        return new NewsLoader(this, uriBuilder.toString());
-    }
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    tab1 = new WorldFragment();
+                    return tab1;
+                case 1:
+                    tab2 = new PoliticsFragment();
+                    return tab2;
+                case 2:
+                    tab3 = new SportsFragment();
+                    return tab3;
+                default:
+                    return null;
+            }
+        }
 
-    @Override
-    public void onLoadFinished(Loader<ArrayList<NewsData>> loader, ArrayList<NewsData> news) {
-        EmptyStateTextView.setText(R.string.no_news);
-
-        // Clear the adapter of previous books data
-        customAdapter.clear();
-
-        loadSpin.setVisibility(View.GONE);
-
-        if (news != null && !news.isEmpty()) {
-            customAdapter.addAll(news);
-            newsListView.animate().alpha(1.0f).setDuration(400);
-
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 3;
         }
     }
 
-    @Override
-    public void onLoaderReset(Loader<ArrayList<NewsData>> loader) {
-        // Loader reset, so we can clear out our existing data.
-        customAdapter.clear();
-    }
 
     //Check internet is connected or not, to notify user
     public boolean checkNet() {
@@ -217,4 +178,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
+
 }
