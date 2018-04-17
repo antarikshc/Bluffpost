@@ -1,5 +1,6 @@
 package com.antarikshc.theguardiannews;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     private TextView EmptyStateTextView;
     ProgressBar loadSpin;
     Uri.Builder worldUri;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     LoaderManager loaderManager;
 
@@ -60,10 +64,11 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         loadSpin = view.findViewById(R.id.loadSpin);
         EmptyStateTextView = view.findViewById(R.id.emptyView);
 
+        swipeRefreshLayout = view.findViewById(R.id.world_refresh);
         worldNewsList.animate().alpha(0.1f).setDuration(400);
 
         //initiate CustomAdapter and set it for worldNewsList
-        worldNewsAdapter = new CustomAdapter(getContext(), new ArrayList<NewsData>());
+        worldNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
         worldNewsList.setAdapter(worldNewsAdapter);
 
         //set empty text view for a proper msg to user
@@ -87,6 +92,50 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         if (worldNewsAdapter.getCount() == 0) {
             executeLoader();
         }
+
+        worldNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NewsData currentData = worldNewsAdapter.getItem(position);
+
+                if (currentData != null) {
+
+                    try {
+
+                        //Explicit Intent
+                        Intent webActivityIntent = new Intent(getContext(), WebviewActivity.class);
+                        webActivityIntent.putExtra("url", currentData.getWebUrl());
+                        startActivity(webActivityIntent);
+
+                    } catch (Exception e) {
+
+                        //Implicit Intent
+                        Uri webUri = Uri.parse(currentData.getWebUrl());
+                        Intent webBrowserIntent = new Intent(Intent.ACTION_VIEW, webUri);
+
+                        if (webBrowserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            startActivity(webBrowserIntent);
+                        }
+                    }
+                }
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                EmptyStateTextView.setText("");
+
+                WORLD_NEWS_LOADER += 1;
+                swipeRefreshLayout.setRefreshing(true);
+                executeLoader();
+
+                destroyLoader(WORLD_NEWS_LOADER - 1);
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
     }
 
     //This is to prevent listview losing the scroll position
@@ -112,6 +161,10 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     //Initiate and destroy loader methods to be called after search is submitted
     private void executeLoader() {
         loaderManager.initLoader(WORLD_NEWS_LOADER, null, this);
+    }
+
+    private void destroyLoader(int id) {
+        loaderManager.destroyLoader(id);
     }
 
     @NonNull

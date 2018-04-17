@@ -148,12 +148,15 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     tab1 = new WorldFragment();
+                    tab1.setRetainInstance(true);
                     return tab1;
                 case 1:
                     tab2 = new PoliticsFragment();
+                    tab2.setRetainInstance(true);
                     return tab2;
                 case 2:
                     tab3 = new SportsFragment();
+                    tab3.setRetainInstance(true);
                     return tab3;
                 default:
                     return null;
