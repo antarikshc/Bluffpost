@@ -11,9 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class CustomAdapter extends ArrayAdapter<NewsData> {
 
@@ -23,8 +21,9 @@ public class CustomAdapter extends ArrayAdapter<NewsData> {
     private static class ViewHolder {
         ImageView coverImage;
         TextView txtTitle;
-        TextView txtTime;
+        TextView txtAuthor;
         TextView txtCat;
+        TextView txtTime;
     }
 
     CustomAdapter(@NonNull Context context, ArrayList<NewsData> dataSet) {
@@ -49,6 +48,7 @@ public class CustomAdapter extends ArrayAdapter<NewsData> {
             convertView = inflater.inflate(R.layout.custom_list, parent, false);
             viewHolder.coverImage = convertView.findViewById(R.id.coverImage);
             viewHolder.txtTitle = convertView.findViewById(R.id.txtTitle);
+            viewHolder.txtAuthor = convertView.findViewById(R.id.txtAuthor);
             viewHolder.txtTime = convertView.findViewById(R.id.txtTime);
             viewHolder.txtCat = convertView.findViewById(R.id.txtCat);
 
@@ -62,21 +62,20 @@ public class CustomAdapter extends ArrayAdapter<NewsData> {
         if (dataModel != null) {
             viewHolder.coverImage.setImageBitmap(dataModel.getImage());
         }
+
         viewHolder.txtTitle.setText(dataModel.getTitle());
+
+        if (dataModel.getAuthor() == null) {
+            viewHolder.txtAuthor.setVisibility(View.GONE);  //Lets not waste space if author is N/A
+        } else {
+            viewHolder.txtAuthor.setText(dataModel.getAuthor());
+        }
+
         viewHolder.txtCat.setText(dataModel.getCategory());
-        //viewHolder.txtTime.setText(formatDate(dataModel.getDate()) + " " + formatTime(dataModel.getTime()));
 
         viewHolder.txtTime.setText(getRelativeTime(dataModel.getTimeInMillis()));
 
         return convertView;
-    }
-
-    private String formatDate(Date date) {
-        return DateFormat.getDateInstance(DateFormat.SHORT).format(date);
-    }
-
-    private String formatTime(Date time) {
-        return DateFormat.getTimeInstance(DateFormat.SHORT).format(time);
     }
 
     private String getRelativeTime(Long timeInMillis) {

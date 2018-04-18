@@ -81,7 +81,8 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         sportsUri.appendQueryParameter("format", "json");
         sportsUri.appendQueryParameter("page-size", "8");
         sportsUri.appendQueryParameter("from-date", "2018-01-01");
-        sportsUri.appendQueryParameter("show-fields", "thumbnail,headline");
+        sportsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        sportsUri.appendQueryParameter("show-tags", "contributor");
         sportsUri.appendQueryParameter("api-key", API_KEY);
 
         loaderManager = getActivity().getSupportLoaderManager();

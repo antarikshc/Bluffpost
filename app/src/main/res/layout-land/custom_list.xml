@@ -2,35 +2,32 @@
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp"
-    android:paddingBottom="6dp"
+    android:padding="10dp"
     android:background="@drawable/custom_list_border">
 
     <ImageView
         android:id="@+id/coverImage"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_width="350dp"
+        android:layout_height="180dp"
+        android:paddingEnd="10dp"
         android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/coverImage"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/coverImage"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
-        android:maxLines="3"
+        android:maxLines="6"
         android:textSize="22sp" />
-
 
     <TextView
         android:id="@+id/txtAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/coverImage"
         android:layout_below="@+id/txtTitle"
         android:textColor="@color/secondary_text"
         android:textSize="14sp" />
@@ -39,18 +36,17 @@
         android:id="@+id/txtCat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/txtAuthor"
+        android:layout_alignBottom="@+id/coverImage"
+        android:layout_toEndOf="@+id/coverImage"
         android:textColor="@color/secondary_text"
-        android:textSize="16sp" />
-
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/coverImage"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/txtAuthor"
         android:textColor="@color/secondary_text"
         android:textSize="14sp" />
 

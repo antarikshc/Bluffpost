@@ -5,14 +5,16 @@ import android.graphics.Bitmap;
 public class NewsData {
 
     private String title;
+    private String author;
     private String category;
     private Long timeInMillis;
     private String webUrl;
     private String imgUrl;
     private Bitmap image;
 
-    NewsData(String title, String category, Long timeInMillis, String webUrl, String imgUrl, Bitmap image) {
+    NewsData(String title, String author, String category, Long timeInMillis, String webUrl, String imgUrl, Bitmap image) {
         this.title = title;
+        this.author = author;
         this.category = category;
         this.timeInMillis = timeInMillis;
         this.webUrl = webUrl;
@@ -26,6 +28,14 @@ public class NewsData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getCategory() {

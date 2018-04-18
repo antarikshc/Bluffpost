@@ -144,20 +144,25 @@ public class ConnectAPI {
 
             JSONObject response = root.getJSONObject("response");
 
-            JSONArray results = response.getJSONArray("results");
+            JSONArray results;
+            if (response.has("editorsPicks") && !response.isNull("editorsPicks")) {
+                results = response.getJSONArray("editorsPicks");
+            } else {
+                results = response.getJSONArray("results");
+            }
 
             for (int i = 0; i < results.length(); i++) {
 
                 //Initialize everything with null to perform null checks
                 String selection = null;
                 String title = null;
+                String author = null;
                 String dateTimeInString = null;
                 Long timeInMills = null;
                 JSONObject fields = null;
                 String imgUrl = null;
 
                 JSONObject newsItem = results.getJSONObject(i);
-
 
                 selection = newsItem.getString("sectionName");
 
@@ -197,6 +202,14 @@ public class ConnectAPI {
                     title = newsItem.getString("webTitle");
                 }
 
+                if (newsItem.has("tags") && !newsItem.isNull("tags")) {
+                    JSONArray tags = newsItem.getJSONArray("tags");
+                    JSONObject tagsObject = tags.getJSONObject(0);
+                    author = tagsObject.getString("webTitle");
+                } else if (fields.has("byline") && !fields.isNull("byline")) {
+                    author = fields.getString("byline");
+                }
+
                 //downloading thumbnails
                 Bitmap coverImage = null;
                 // Create URL object
@@ -212,7 +225,7 @@ public class ConnectAPI {
                     }
                 }
 
-                news.add(new NewsData(title, selection, timeInMills, url, imgUrl, coverImage));
+                news.add(new NewsData(title, author, selection, timeInMills, url, imgUrl, coverImage));
             }
 
         } catch (JSONException e) {

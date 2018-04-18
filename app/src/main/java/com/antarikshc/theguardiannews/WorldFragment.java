@@ -75,15 +75,14 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         worldNewsList.setEmptyView(EmptyStateTextView);
 
         /** URL to fetch data for World news**/
-        Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
+        Uri baseUri = Uri.parse("https://content.guardianapis.com/world");
         worldUri = baseUri.buildUpon();
 
-        worldUri.appendQueryParameter("q", "international");
+        worldUri.appendQueryParameter("show-editors-picks", "true");
         worldUri.appendQueryParameter("format", "json");
-        worldUri.appendQueryParameter("page-size", "8");
         worldUri.appendQueryParameter("from-date", "2017-03-01");
-        worldUri.appendQueryParameter("show-fields", "thumbnail,headline");
-        worldUri.appendQueryParameter("order-by", "newest");
+        worldUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        worldUri.appendQueryParameter("show-tags", "contributor");
         worldUri.appendQueryParameter("api-key", API_KEY);
 
         loaderManager = getActivity().getSupportLoaderManager();

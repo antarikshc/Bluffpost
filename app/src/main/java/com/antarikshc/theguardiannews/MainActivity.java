@@ -96,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 uriBuilder.appendQueryParameter("format", "json");
                 uriBuilder.appendQueryParameter("page-size", "8");
                 uriBuilder.appendQueryParameter("from-date", "2017-01-01");
-                uriBuilder.appendQueryParameter("show-fields", "thumbnail,headline");
+                uriBuilder.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+                uriBuilder.appendQueryParameter("show-tags", "contributor");
                 uriBuilder.appendQueryParameter("api-key", API_KEY);
 
                 Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
@@ -169,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
             return 3;
         }
     }
-
 
     //Check internet is connected or not, to notify user
     public boolean checkNet() {

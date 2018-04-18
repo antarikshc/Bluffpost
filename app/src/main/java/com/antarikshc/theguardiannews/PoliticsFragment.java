@@ -81,7 +81,8 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
         politicsUri.appendQueryParameter("format", "json");
         politicsUri.appendQueryParameter("page-size", "8");
         politicsUri.appendQueryParameter("from-date", "2018-01-01");
-        politicsUri.appendQueryParameter("show-fields", "thumbnail,headline");
+        politicsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        //politicsUri.appendQueryParameter("show-tags", "contributor");  -not getting results for politics with this tag
         politicsUri.appendQueryParameter("api-key", API_KEY);
 
         loaderManager = getActivity().getSupportLoaderManager();
