@@ -1,6 +1,9 @@
 package com.antarikshc.theguardiannews;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -88,8 +91,11 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         loaderManager = getActivity().getSupportLoaderManager();
 
         //this is to prevent loader from re-fetching the data
-        if (worldNewsAdapter.getCount() == 0) {
+        if (worldNewsAdapter.getCount() == 0 && checkNet()) {
             executeLoader();
+        } else {
+            loadSpin.setVisibility(View.GONE);
+            EmptyStateTextView.setText(R.string.no_network);
         }
 
         worldNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -127,7 +133,13 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
 
                 WORLD_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
-                executeLoader();
+
+                if (checkNet()) {
+                    executeLoader();
+                } else {
+                    loadSpin.setVisibility(View.GONE);
+                    EmptyStateTextView.setText(R.string.no_network);
+                }
 
                 destroyLoader(WORLD_NEWS_LOADER - 1);
 
@@ -191,5 +203,15 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<NewsData>> loader) {
         worldNewsAdapter.clear();
+    }
+
+    //Check internet is connected or not, to notify user
+    public boolean checkNet() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

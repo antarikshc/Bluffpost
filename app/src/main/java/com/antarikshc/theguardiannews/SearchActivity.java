@@ -88,6 +88,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (checkNet() && searchNewsAdapter.getCount() == 0) {
             executeLoader();
         } else {
+            loadSpin.setVisibility(View.GONE);
             EmptyStateTextView.setText(R.string.no_network);
         }
 
@@ -126,7 +127,13 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
                 SEARCH_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
-                executeLoader();
+
+                if (checkNet()) {
+                    executeLoader();
+                } else {
+                    loadSpin.setVisibility(View.GONE);
+                    EmptyStateTextView.setText(R.string.no_network);
+                }
 
                 destroyLoader(SEARCH_NEWS_LOADER - 1);
 

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,31 +82,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                item.collapseActionView();
+                if (checkNet()) {
 
-                //Clear focus so that search bar can be translated back up top
-                searchView.setQuery("", false);
-                searchView.clearFocus();
-                searchBar.clearFocus();
+                    item.collapseActionView();
 
-                //create URL for the search query
-                Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
-                Uri.Builder uriBuilder = baseUri.buildUpon();
+                    //Clear focus so that search bar can be translated back up top
+                    searchView.setQuery("", false);
+                    searchView.clearFocus();
+                    searchBar.clearFocus();
 
-                uriBuilder.appendQueryParameter("q", query);
-                uriBuilder.appendQueryParameter("format", "json");
-                uriBuilder.appendQueryParameter("page-size", "8");
-                uriBuilder.appendQueryParameter("from-date", "2017-01-01");
-                uriBuilder.appendQueryParameter("show-fields", "thumbnail,headline,byline");
-                uriBuilder.appendQueryParameter("show-tags", "contributor");
-                uriBuilder.appendQueryParameter("api-key", API_KEY);
+                    //create URL for the search query
+                    Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
+                    Uri.Builder uriBuilder = baseUri.buildUpon();
 
-                Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
-                searchIntent.putExtra("title", query);
-                searchIntent.putExtra("url", uriBuilder.toString());
-                startActivity(searchIntent);
+                    uriBuilder.appendQueryParameter("q", query);
+                    uriBuilder.appendQueryParameter("format", "json");
+                    uriBuilder.appendQueryParameter("page-size", "8");
+                    uriBuilder.appendQueryParameter("from-date", "2017-01-01");
+                    uriBuilder.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+                    uriBuilder.appendQueryParameter("show-tags", "contributor");
+                    uriBuilder.appendQueryParameter("api-key", API_KEY);
 
-                return false;
+                    Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
+                    searchIntent.putExtra("title", query);
+                    searchIntent.putExtra("url", uriBuilder.toString());
+                    startActivity(searchIntent);
+
+                } else {
+                    Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                }
+                return true;
             }
 
             @Override
@@ -174,12 +180,10 @@ public class MainActivity extends AppCompatActivity {
     //Check internet is connected or not, to notify user
     public boolean checkNet() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
         NetworkInfo activeNetwork = null;
         if (cm != null) {
             activeNetwork = cm.getActiveNetworkInfo();
         }
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
 }
