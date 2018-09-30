@@ -1,4 +1,4 @@
-## Commit Style Guidelines for OpenCI
+## Commit Style Guidelines for The Guardians News App
 
 ### Message Structure
 Commit messages consist of three distinct parts, separated by a blank line: the title, an optional body/content, and an optional footer/metadata. The layout looks like this:
