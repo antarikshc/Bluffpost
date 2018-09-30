@@ -55,31 +55,13 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        worldNewsList = view.findViewById(R.id.world_news_list);
+        initializeViews(view);
 
-        //user interactive views
-        loadSpin = view.findViewById(R.id.load_spin);
-        EmptyStateTextView = view.findViewById(R.id.empty_view);
-
-        swipeRefreshLayout = view.findViewById(R.id.world_refresh);
-        worldNewsList.animate().alpha(0.1f).setDuration(400);
-
-        //initiate CustomAdapter and set it for worldNewsList
-        worldNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
-        worldNewsList.setAdapter(worldNewsAdapter);
-
-        //set empty text view for a proper msg to user
-        worldNewsList.setEmptyView(EmptyStateTextView);
+        setupNewsList();
 
         // URL to fetch data for World news
         worldUri = Master.getWorldUri();
-
-        worldUri.appendQueryParameter("show-editors-picks", "true");
-        worldUri.appendQueryParameter("format", "json");
-        worldUri.appendQueryParameter("from-date", "2017-03-01");
-        worldUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
-        worldUri.appendQueryParameter("show-tags", "contributor");
-        worldUri.appendQueryParameter("api-key", Master.getAPIKey());
+        buildUriParams();
 
         loaderManager = getActivity().getSupportLoaderManager();
 
@@ -142,7 +124,44 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
 
     }
 
-    //This is to prevent listview losing the scroll position
+    /**
+     * Add URL params to call API
+     */
+    private void buildUriParams() {
+        worldUri.appendQueryParameter("show-editors-picks", "true");
+        worldUri.appendQueryParameter("format", "json");
+        worldUri.appendQueryParameter("from-date", "2017-03-01");
+        worldUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        worldUri.appendQueryParameter("show-tags", "contributor");
+        worldUri.appendQueryParameter("api-key", Master.getAPIKey());
+    }
+
+    /**
+     * Initiate News List View, Adapter and add animation
+     * Set Empty View
+     */
+    private void setupNewsList() {
+        worldNewsList.animate().alpha(0.1f).setDuration(400);
+
+        // Initiate CustomAdapter and set it for worldNewsList
+        worldNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
+        worldNewsList.setAdapter(worldNewsAdapter);
+
+        // Set empty text view for a proper msg to user
+        worldNewsList.setEmptyView(EmptyStateTextView);
+    }
+
+    private void initializeViews(@NonNull View view) {
+        worldNewsList = view.findViewById(R.id.world_news_list);
+        //user interactive views
+        loadSpin = view.findViewById(R.id.load_spin);
+        EmptyStateTextView = view.findViewById(R.id.empty_view);
+        swipeRefreshLayout = view.findViewById(R.id.world_refresh);
+    }
+
+    /**
+     * This is to prevent ListView losing the scroll position
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
