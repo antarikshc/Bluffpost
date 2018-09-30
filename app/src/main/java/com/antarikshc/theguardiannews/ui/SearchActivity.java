@@ -1,4 +1,4 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,107 +8,105 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.antarikshc.theguardiannews.R;
+import com.antarikshc.theguardiannews.datasource.NewsLoader;
+import com.antarikshc.theguardiannews.model.NewsData;
+
 import java.util.ArrayList;
 
-public class WorldFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
-
-    /**
-     * API KEY
-     **/
-    private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
-
-    //we are using different loaders for each tab
-    private static int WORLD_NEWS_LOADER = 1;
+public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
     /**
      * global declarations
      **/
-    View view;
+    Intent searchIntent;
+    String SEARCH_NEWS_URL;
 
     int scrollState;
 
-    ListView worldNewsList;
-    private CustomAdapter worldNewsAdapter;
+    Toolbar toolbar;
+    ListView searchNewsList;
+    private CustomAdapter searchNewsAdapter;
     private TextView EmptyStateTextView;
     ProgressBar loadSpin;
-    Uri.Builder worldUri;
     SwipeRefreshLayout swipeRefreshLayout;
 
     LoaderManager loaderManager;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
-        //inflate the fragment with world_fragment layout
-        view = inflater.inflate(R.layout.world_fragment, container, false);
-        return view;
-    }
+    //we are using different loaders for each tab
+    private static int SEARCH_NEWS_LOADER = 30;
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
 
-        worldNewsList = view.findViewById(R.id.world_news_list);
+        toolbar = findViewById(R.id.search_activity_toolbar);
+
+        swipeRefreshLayout = findViewById(R.id.search_refresh);
+        searchNewsList = findViewById(R.id.search_news_list);
 
         //user interactive views
-        loadSpin = view.findViewById(R.id.loadSpin);
-        EmptyStateTextView = view.findViewById(R.id.emptyView);
+        loadSpin = findViewById(R.id.loadSpin);
+        EmptyStateTextView = findViewById(R.id.emptyView);
 
-        swipeRefreshLayout = view.findViewById(R.id.world_refresh);
-        worldNewsList.animate().alpha(0.1f).setDuration(400);
+        searchIntent = getIntent();
+
+        //set the title as the search query on toolbar
+        String title = searchIntent.getStringExtra("title");
+        title = title.substring(0, 1).toUpperCase() + title.substring(1);
+        toolbar.setTitle(title);
+
+        //set it as action bar to retrieve it back
+        setSupportActionBar(toolbar);
+
+        //Add back button in Toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        SEARCH_NEWS_URL = searchIntent.getStringExtra("url");
+
+        loadSpin.setVisibility(View.VISIBLE);
+        searchNewsList.animate().alpha(0.1f).setDuration(400);
 
         //initiate CustomAdapter and set it for worldNewsList
-        worldNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
-        worldNewsList.setAdapter(worldNewsAdapter);
+        searchNewsAdapter = new CustomAdapter(getApplicationContext(), new ArrayList<NewsData>());
+        searchNewsList.setAdapter(searchNewsAdapter);
 
         //set empty text view for a proper msg to user
-        worldNewsList.setEmptyView(EmptyStateTextView);
+        searchNewsList.setEmptyView(EmptyStateTextView);
 
-        /** URL to fetch data for World news**/
-        Uri baseUri = Uri.parse("https://content.guardianapis.com/world");
-        worldUri = baseUri.buildUpon();
+        loaderManager = getSupportLoaderManager();
 
-        worldUri.appendQueryParameter("show-editors-picks", "true");
-        worldUri.appendQueryParameter("format", "json");
-        worldUri.appendQueryParameter("from-date", "2017-03-01");
-        worldUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
-        worldUri.appendQueryParameter("show-tags", "contributor");
-        worldUri.appendQueryParameter("api-key", API_KEY);
-
-        loaderManager = getActivity().getSupportLoaderManager();
-
-        //this is to prevent loader from re-fetching the data
-        if (worldNewsAdapter.getCount() == 0 && checkNet()) {
+        if (checkNet() && searchNewsAdapter.getCount() == 0) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
             EmptyStateTextView.setText(R.string.no_network);
         }
 
-        worldNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsData currentData = worldNewsAdapter.getItem(position);
+                NewsData currentData = searchNewsAdapter.getItem(position);
 
                 if (currentData != null) {
 
                     try {
 
                         //Explicit Intent
-                        Intent webActivityIntent = new Intent(getContext(), WebviewActivity.class);
+                        Intent webActivityIntent = new Intent(getApplicationContext(), WebviewActivity.class);
                         webActivityIntent.putExtra("url", currentData.getWebUrl());
                         startActivity(webActivityIntent);
 
@@ -118,7 +116,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
                         Uri webUri = Uri.parse(currentData.getWebUrl());
                         Intent webBrowserIntent = new Intent(Intent.ACTION_VIEW, webUri);
 
-                        if (webBrowserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        if (webBrowserIntent.resolveActivity(getPackageManager()) != null) {
                             startActivity(webBrowserIntent);
                         }
                     }
@@ -131,7 +129,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
             public void onRefresh() {
                 EmptyStateTextView.setText("");
 
-                WORLD_NEWS_LOADER += 1;
+                SEARCH_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
                 if (checkNet()) {
@@ -141,7 +139,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
                     EmptyStateTextView.setText(R.string.no_network);
                 }
 
-                destroyLoader(WORLD_NEWS_LOADER - 1);
+                destroyLoader(SEARCH_NEWS_LOADER - 1);
 
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -149,29 +147,35 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     //This is to prevent listview losing the scroll position
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         try {
-            outState.putInt("CURRENT_SCROLL", worldNewsList.getFirstVisiblePosition());
+            outState.putInt("CURRENT_SCROLL", searchNewsList.getFirstVisiblePosition());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             scrollState = savedInstanceState.getInt("CURRENT_SCROLL");
-            worldNewsList.setSelection(scrollState);
+            searchNewsList.setSelection(scrollState);
         }
     }
 
     //Initiate and destroy loader methods to be called after search is submitted
     private void executeLoader() {
-        loaderManager.initLoader(WORLD_NEWS_LOADER, null, this);
+        loaderManager.initLoader(SEARCH_NEWS_LOADER, null, this);
     }
 
     private void destroyLoader(int id) {
@@ -181,7 +185,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     @NonNull
     @Override
     public Loader<ArrayList<NewsData>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new NewsLoader(getActivity(), worldUri.toString());
+        return new NewsLoader(this, SEARCH_NEWS_URL);
     }
 
     @Override
@@ -189,29 +193,31 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         EmptyStateTextView.setText(R.string.no_news);
 
         // Clear the adapter of previous books data
-        worldNewsAdapter.clear();
+        searchNewsAdapter.clear();
 
         loadSpin.setVisibility(View.GONE);
 
         if (news != null && !news.isEmpty()) {
-            worldNewsAdapter.addAll(news);
-            worldNewsList.animate().alpha(1.0f).setDuration(400);
-            worldNewsList.setSelection(scrollState);
+            searchNewsAdapter.addAll(news);
+            searchNewsList.animate().alpha(1.0f).setDuration(400);
+            searchNewsList.setSelection(scrollState);
         }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<NewsData>> loader) {
-        worldNewsAdapter.clear();
+        searchNewsAdapter.clear();
     }
 
     //Check internet is connected or not, to notify user
     public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
         NetworkInfo activeNetwork = null;
         if (cm != null) {
             activeNetwork = cm.getActiveNetworkInfo();
         }
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
+
 }

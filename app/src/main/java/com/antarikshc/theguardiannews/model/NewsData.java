@@ -1,4 +1,4 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.model;
 
 import android.graphics.Bitmap;
 
@@ -12,7 +12,7 @@ public class NewsData {
     private String imgUrl;
     private Bitmap image;
 
-    NewsData(String title, String author, String category, Long timeInMillis, String webUrl, String imgUrl, Bitmap image) {
+    public NewsData(String title, String author, String category, Long timeInMillis, String webUrl, String imgUrl, Bitmap image) {
         this.title = title;
         this.author = author;
         this.category = category;

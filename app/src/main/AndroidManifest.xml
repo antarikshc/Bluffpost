@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeDark">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,10 +23,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchActivity"
+            android:name=".ui.SearchActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".WebviewActivity" />
+        <activity android:name=".ui.WebviewActivity" />
     </application>
 
 </manifest>
