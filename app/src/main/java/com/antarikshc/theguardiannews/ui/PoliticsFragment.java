@@ -1,9 +1,6 @@
 package com.antarikshc.theguardiannews.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,34 +20,27 @@ import android.widget.TextView;
 import com.antarikshc.theguardiannews.R;
 import com.antarikshc.theguardiannews.datasource.NewsLoader;
 import com.antarikshc.theguardiannews.model.NewsData;
+import com.antarikshc.theguardiannews.util.Master;
 
 import java.util.ArrayList;
 
 public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
-    /**
-     * API KEY
-     **/
-    private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
-
     //Books loaded ID, default = 1 currently using single Loader
     private static int POLITICS_NEWS_LOADER = 25;
 
-    /**
-     * global declarations
-     **/
-    View view;
+    // Global params
+    private View view;
 
-    int scrollState;
-
-    ListView politicsNewsList;
+    private int scrollState;
+    private ListView politicsNewsList;
     private CustomAdapter politicsNewsAdapter;
     private TextView EmptyStateTextView;
-    ProgressBar loadSpin;
-    Uri.Builder politicsUri;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadSpin;
+    private Uri.Builder politicsUri;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    LoaderManager loaderManager;
+    private LoaderManager loaderManager;
 
     @Nullable
     @Override
@@ -80,9 +70,8 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
         //set empty text view for a proper msg to user
         politicsNewsList.setEmptyView(EmptyStateTextView);
 
-        /** URL to fetch data for Politics News**/
-        Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
-        politicsUri = baseUri.buildUpon();
+        // URL to fetch data for Politics News
+        politicsUri = Master.getSearchUri();
 
         politicsUri.appendQueryParameter("q", "politics");
         politicsUri.appendQueryParameter("format", "json");
@@ -90,12 +79,12 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
         politicsUri.appendQueryParameter("from-date", "2018-01-01");
         politicsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
         //politicsUri.appendQueryParameter("show-tags", "contributor");  -not getting results for politics with this tag
-        politicsUri.appendQueryParameter("api-key", API_KEY);
+        politicsUri.appendQueryParameter("api-key", Master.getAPIKey());
 
         loaderManager = getActivity().getSupportLoaderManager();
 
         //this is to prevent loader from re-fetching the data
-        if (politicsNewsAdapter.getCount() == 0 && checkNet()) {
+        if (politicsNewsAdapter.getCount() == 0 && Master.checkNet(getContext())) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
@@ -138,7 +127,7 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
                 POLITICS_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
-                if (checkNet()) {
+                if (Master.checkNet(getContext())) {
                     executeLoader();
                 } else {
                     loadSpin.setVisibility(View.GONE);
@@ -209,13 +198,4 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
         politicsNewsAdapter.clear();
     }
 
-    //Check internet is connected or not, to notify user
-    public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
 }

@@ -1,9 +1,6 @@
 package com.antarikshc.theguardiannews.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,34 +20,27 @@ import android.widget.TextView;
 import com.antarikshc.theguardiannews.R;
 import com.antarikshc.theguardiannews.datasource.NewsLoader;
 import com.antarikshc.theguardiannews.model.NewsData;
+import com.antarikshc.theguardiannews.util.Master;
 
 import java.util.ArrayList;
 
 public class WorldFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
-    /**
-     * API KEY
-     **/
-    private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
-
-    //we are using different loaders for each tab
+    // we are using different loaders for each tab
     private static int WORLD_NEWS_LOADER = 1;
 
-    /**
-     * global declarations
-     **/
-    View view;
+    // Global Params
+    private View view;
 
-    int scrollState;
-
-    ListView worldNewsList;
+    private int scrollState;
+    private ListView worldNewsList;
     private CustomAdapter worldNewsAdapter;
     private TextView EmptyStateTextView;
-    ProgressBar loadSpin;
-    Uri.Builder worldUri;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadSpin;
+    private Uri.Builder worldUri;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    LoaderManager loaderManager;
+    private LoaderManager loaderManager;
 
     @Nullable
     @Override
@@ -81,21 +71,20 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         //set empty text view for a proper msg to user
         worldNewsList.setEmptyView(EmptyStateTextView);
 
-        /** URL to fetch data for World news**/
-        Uri baseUri = Uri.parse("https://content.guardianapis.com/world");
-        worldUri = baseUri.buildUpon();
+        // URL to fetch data for World news
+        worldUri = Master.getWorldUri();
 
         worldUri.appendQueryParameter("show-editors-picks", "true");
         worldUri.appendQueryParameter("format", "json");
         worldUri.appendQueryParameter("from-date", "2017-03-01");
         worldUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
         worldUri.appendQueryParameter("show-tags", "contributor");
-        worldUri.appendQueryParameter("api-key", API_KEY);
+        worldUri.appendQueryParameter("api-key", Master.getAPIKey());
 
         loaderManager = getActivity().getSupportLoaderManager();
 
         //this is to prevent loader from re-fetching the data
-        if (worldNewsAdapter.getCount() == 0 && checkNet()) {
+        if (worldNewsAdapter.getCount() == 0 && Master.checkNet(getContext())) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
@@ -138,7 +127,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
                 WORLD_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
-                if (checkNet()) {
+                if (Master.checkNet(getContext())) {
                     executeLoader();
                 } else {
                     loadSpin.setVisibility(View.GONE);
@@ -209,13 +198,4 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         worldNewsAdapter.clear();
     }
 
-    //Check internet is connected or not, to notify user
-    public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
 }

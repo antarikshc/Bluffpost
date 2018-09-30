@@ -1,9 +1,6 @@
 package com.antarikshc.theguardiannews.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,34 +20,27 @@ import android.widget.TextView;
 import com.antarikshc.theguardiannews.R;
 import com.antarikshc.theguardiannews.datasource.NewsLoader;
 import com.antarikshc.theguardiannews.model.NewsData;
+import com.antarikshc.theguardiannews.util.Master;
 
 import java.util.ArrayList;
 
 public class SportsFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
-    /**
-     * API KEY
-     **/
-    private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
-
-    //Books loaded ID, default = 1 currently using single Loader
+    // Books loaded ID, default = 1 currently using single Loader
     private static int SPORTS_NEWS_LOADER = 50;
 
-    /**
-     * global declarations
-     **/
-    View view;
+    // Global params
+    private View view;
 
-    int scrollState;
-
-    ListView sportsNewsList;
+    private int scrollState;
+    private ListView sportsNewsList;
     private CustomAdapter sportsNewsAdapter;
     private TextView EmptyStateTextView;
-    ProgressBar loadSpin;
-    Uri.Builder sportsUri;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadSpin;
+    private Uri.Builder sportsUri;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    LoaderManager loaderManager;
+    private LoaderManager loaderManager;
 
     @Nullable
     @Override
@@ -80,9 +70,8 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         //set empty text view for a proper msg to user
         sportsNewsList.setEmptyView(EmptyStateTextView);
 
-        /** URL to fetch data for Sports News**/
-        Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
-        sportsUri = baseUri.buildUpon();
+        // URL to fetch data for Sports News
+        sportsUri = Master.getSearchUri();
 
         sportsUri.appendQueryParameter("q", "sports");
         sportsUri.appendQueryParameter("format", "json");
@@ -90,12 +79,12 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         sportsUri.appendQueryParameter("from-date", "2018-01-01");
         sportsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
         sportsUri.appendQueryParameter("show-tags", "contributor");
-        sportsUri.appendQueryParameter("api-key", API_KEY);
+        sportsUri.appendQueryParameter("api-key", Master.getAPIKey());
 
         loaderManager = getActivity().getSupportLoaderManager();
 
         //this is to prevent loader from re-fetching the data
-        if (sportsNewsAdapter.getCount() == 0 && checkNet()) {
+        if (sportsNewsAdapter.getCount() == 0 && Master.checkNet(getContext())) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
@@ -138,7 +127,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
                 SPORTS_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
-                if (checkNet()) {
+                if (Master.checkNet(getContext())) {
                     executeLoader();
                 } else {
                     loadSpin.setVisibility(View.GONE);
@@ -207,15 +196,5 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<NewsData>> loader) {
         sportsNewsAdapter.clear();
-    }
-
-    //Check internet is connected or not, to notify user
-    public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

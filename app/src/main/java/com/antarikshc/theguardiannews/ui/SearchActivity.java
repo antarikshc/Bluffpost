@@ -1,9 +1,6 @@
 package com.antarikshc.theguardiannews.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,27 +19,25 @@ import android.widget.TextView;
 import com.antarikshc.theguardiannews.R;
 import com.antarikshc.theguardiannews.datasource.NewsLoader;
 import com.antarikshc.theguardiannews.model.NewsData;
+import com.antarikshc.theguardiannews.util.Master;
 
 import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
-    /**
-     * global declarations
-     **/
-    Intent searchIntent;
-    String SEARCH_NEWS_URL;
+    // Global params
+    private Intent searchIntent;
+    private String SEARCH_NEWS_URL;
 
-    int scrollState;
-
-    Toolbar toolbar;
-    ListView searchNewsList;
+    private int scrollState;
+    private Toolbar toolbar;
+    private ListView searchNewsList;
     private CustomAdapter searchNewsAdapter;
     private TextView EmptyStateTextView;
-    ProgressBar loadSpin;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadSpin;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    LoaderManager loaderManager;
+    private LoaderManager loaderManager;
 
     //we are using different loaders for each tab
     private static int SEARCH_NEWS_LOADER = 30;
@@ -89,7 +84,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         loaderManager = getSupportLoaderManager();
 
-        if (checkNet() && searchNewsAdapter.getCount() == 0) {
+        if (Master.checkNet(SearchActivity.this) && searchNewsAdapter.getCount() == 0) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
@@ -132,7 +127,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 SEARCH_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
-                if (checkNet()) {
+                if (Master.checkNet(SearchActivity.this)) {
                     executeLoader();
                 } else {
                     loadSpin.setVisibility(View.GONE);
@@ -207,17 +202,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<NewsData>> loader) {
         searchNewsAdapter.clear();
-    }
-
-    //Check internet is connected or not, to notify user
-    public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
 }

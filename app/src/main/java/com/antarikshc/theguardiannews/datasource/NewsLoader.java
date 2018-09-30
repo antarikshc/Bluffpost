@@ -29,6 +29,7 @@ public class NewsLoader extends AsyncTaskLoader<ArrayList<NewsData>> {
             return null;
         }
 
+        // Query the API
         ArrayList<NewsData> news = ConnectAPI.fetchNewsData(mUrl);
         return news;
     }
