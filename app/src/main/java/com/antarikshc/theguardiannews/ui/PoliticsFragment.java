@@ -1,4 +1,4 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,101 +8,111 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.antarikshc.theguardiannews.R;
+import com.antarikshc.theguardiannews.datasource.NewsLoader;
+import com.antarikshc.theguardiannews.model.NewsData;
+
 import java.util.ArrayList;
 
-public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
+public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
+
+    /**
+     * API KEY
+     **/
+    private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
+
+    //Books loaded ID, default = 1 currently using single Loader
+    private static int POLITICS_NEWS_LOADER = 25;
 
     /**
      * global declarations
      **/
-    Intent searchIntent;
-    String SEARCH_NEWS_URL;
+    View view;
 
     int scrollState;
 
-    Toolbar toolbar;
-    ListView searchNewsList;
-    private CustomAdapter searchNewsAdapter;
+    ListView politicsNewsList;
+    private CustomAdapter politicsNewsAdapter;
     private TextView EmptyStateTextView;
     ProgressBar loadSpin;
+    Uri.Builder politicsUri;
     SwipeRefreshLayout swipeRefreshLayout;
 
     LoaderManager loaderManager;
 
-    //we are using different loaders for each tab
-    private static int SEARCH_NEWS_LOADER = 30;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.politics_fragment, container, false);
+        return view;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        toolbar = findViewById(R.id.search_activity_toolbar);
-
-        swipeRefreshLayout = findViewById(R.id.search_refresh);
-        searchNewsList = findViewById(R.id.search_news_list);
+        swipeRefreshLayout = view.findViewById(R.id.politics_refresh);
+        politicsNewsList = view.findViewById(R.id.politics_news_list);
 
         //user interactive views
-        loadSpin = findViewById(R.id.loadSpin);
-        EmptyStateTextView = findViewById(R.id.emptyView);
+        loadSpin = view.findViewById(R.id.loadSpin);
+        EmptyStateTextView = view.findViewById(R.id.emptyView);
 
-        searchIntent = getIntent();
-
-        //set the title as the search query on toolbar
-        String title = searchIntent.getStringExtra("title");
-        title = title.substring(0, 1).toUpperCase() + title.substring(1);
-        toolbar.setTitle(title);
-
-        //set it as action bar to retrieve it back
-        setSupportActionBar(toolbar);
-
-        //Add back button in Toolbar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        SEARCH_NEWS_URL = searchIntent.getStringExtra("url");
-
-        loadSpin.setVisibility(View.VISIBLE);
-        searchNewsList.animate().alpha(0.1f).setDuration(400);
+        politicsNewsList.animate().alpha(0.1f).setDuration(400);
 
         //initiate CustomAdapter and set it for worldNewsList
-        searchNewsAdapter = new CustomAdapter(getApplicationContext(), new ArrayList<NewsData>());
-        searchNewsList.setAdapter(searchNewsAdapter);
+        politicsNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
+        politicsNewsList.setAdapter(politicsNewsAdapter);
 
         //set empty text view for a proper msg to user
-        searchNewsList.setEmptyView(EmptyStateTextView);
+        politicsNewsList.setEmptyView(EmptyStateTextView);
 
-        loaderManager = getSupportLoaderManager();
+        /** URL to fetch data for Politics News**/
+        Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
+        politicsUri = baseUri.buildUpon();
 
-        if (checkNet() && searchNewsAdapter.getCount() == 0) {
+        politicsUri.appendQueryParameter("q", "politics");
+        politicsUri.appendQueryParameter("format", "json");
+        politicsUri.appendQueryParameter("page-size", "8");
+        politicsUri.appendQueryParameter("from-date", "2018-01-01");
+        politicsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        //politicsUri.appendQueryParameter("show-tags", "contributor");  -not getting results for politics with this tag
+        politicsUri.appendQueryParameter("api-key", API_KEY);
+
+        loaderManager = getActivity().getSupportLoaderManager();
+
+        //this is to prevent loader from re-fetching the data
+        if (politicsNewsAdapter.getCount() == 0 && checkNet()) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
             EmptyStateTextView.setText(R.string.no_network);
         }
 
-        searchNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        politicsNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsData currentData = searchNewsAdapter.getItem(position);
+                NewsData currentData = politicsNewsAdapter.getItem(position);
 
                 if (currentData != null) {
 
                     try {
 
                         //Explicit Intent
-                        Intent webActivityIntent = new Intent(getApplicationContext(), WebviewActivity.class);
+                        Intent webActivityIntent = new Intent(getContext(), WebviewActivity.class);
                         webActivityIntent.putExtra("url", currentData.getWebUrl());
                         startActivity(webActivityIntent);
 
@@ -112,7 +122,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         Uri webUri = Uri.parse(currentData.getWebUrl());
                         Intent webBrowserIntent = new Intent(Intent.ACTION_VIEW, webUri);
 
-                        if (webBrowserIntent.resolveActivity(getPackageManager()) != null) {
+                        if (webBrowserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                             startActivity(webBrowserIntent);
                         }
                     }
@@ -125,7 +135,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             public void onRefresh() {
                 EmptyStateTextView.setText("");
 
-                SEARCH_NEWS_LOADER += 1;
+                POLITICS_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
                 if (checkNet()) {
@@ -135,7 +145,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     EmptyStateTextView.setText(R.string.no_network);
                 }
 
-                destroyLoader(SEARCH_NEWS_LOADER - 1);
+                destroyLoader(POLITICS_NEWS_LOADER - 1);
 
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -143,35 +153,29 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
     //This is to prevent listview losing the scroll position
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         try {
-            outState.putInt("CURRENT_SCROLL", searchNewsList.getFirstVisiblePosition());
+            outState.putInt("CURRENT_SCROLL", politicsNewsList.getFirstVisiblePosition());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
             scrollState = savedInstanceState.getInt("CURRENT_SCROLL");
-            searchNewsList.setSelection(scrollState);
+            politicsNewsList.setSelection(scrollState);
         }
     }
 
     //Initiate and destroy loader methods to be called after search is submitted
     private void executeLoader() {
-        loaderManager.initLoader(SEARCH_NEWS_LOADER, null, this);
+        loaderManager.initLoader(POLITICS_NEWS_LOADER, null, this);
     }
 
     private void destroyLoader(int id) {
@@ -181,7 +185,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @NonNull
     @Override
     public Loader<ArrayList<NewsData>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new NewsLoader(this, SEARCH_NEWS_URL);
+        return new NewsLoader(getActivity(), politicsUri.toString());
     }
 
     @Override
@@ -189,31 +193,29 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         EmptyStateTextView.setText(R.string.no_news);
 
         // Clear the adapter of previous books data
-        searchNewsAdapter.clear();
+        politicsNewsAdapter.clear();
 
         loadSpin.setVisibility(View.GONE);
 
         if (news != null && !news.isEmpty()) {
-            searchNewsAdapter.addAll(news);
-            searchNewsList.animate().alpha(1.0f).setDuration(400);
-            searchNewsList.setSelection(scrollState);
+            politicsNewsAdapter.addAll(news);
+            politicsNewsList.animate().alpha(1.0f).setDuration(400);
+            politicsNewsList.setSelection(scrollState);
         }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<NewsData>> loader) {
-        searchNewsAdapter.clear();
+        politicsNewsAdapter.clear();
     }
 
     //Check internet is connected or not, to notify user
     public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = null;
         if (cm != null) {
             activeNetwork = cm.getActiveNetworkInfo();
         }
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
 }

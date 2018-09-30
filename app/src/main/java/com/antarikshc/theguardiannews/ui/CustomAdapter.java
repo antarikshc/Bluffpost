@@ -1,4 +1,4 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.ui;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.antarikshc.theguardiannews.R;
+import com.antarikshc.theguardiannews.model.NewsData;
 
 import java.util.ArrayList;
 

@@ -1,10 +1,12 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.antarikshc.theguardiannews.R;
 
 public class WebviewActivity extends AppCompatActivity {
 

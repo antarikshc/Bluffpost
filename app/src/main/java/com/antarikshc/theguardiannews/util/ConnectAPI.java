@@ -1,8 +1,10 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.antarikshc.theguardiannews.model.NewsData;
 
 import org.json.JSONArray;
 import org.json.JSONException;

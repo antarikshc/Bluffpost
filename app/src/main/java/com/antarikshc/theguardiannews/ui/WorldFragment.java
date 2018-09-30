@@ -1,4 +1,4 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,17 +20,21 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.antarikshc.theguardiannews.R;
+import com.antarikshc.theguardiannews.datasource.NewsLoader;
+import com.antarikshc.theguardiannews.model.NewsData;
+
 import java.util.ArrayList;
 
-public class SportsFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
+public class WorldFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
     /**
      * API KEY
      **/
     private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
 
-    //Books loaded ID, default = 1 currently using single Loader
-    private static int SPORTS_NEWS_LOADER = 50;
+    //we are using different loaders for each tab
+    private static int WORLD_NEWS_LOADER = 1;
 
     /**
      * global declarations
@@ -39,11 +43,11 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
 
     int scrollState;
 
-    ListView sportsNewsList;
-    private CustomAdapter sportsNewsAdapter;
+    ListView worldNewsList;
+    private CustomAdapter worldNewsAdapter;
     private TextView EmptyStateTextView;
     ProgressBar loadSpin;
-    Uri.Builder sportsUri;
+    Uri.Builder worldUri;
     SwipeRefreshLayout swipeRefreshLayout;
 
     LoaderManager loaderManager;
@@ -52,7 +56,8 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.sports_fragment, container, false);
+        //inflate the fragment with world_fragment layout
+        view = inflater.inflate(R.layout.world_fragment, container, false);
         return view;
     }
 
@@ -60,48 +65,47 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        swipeRefreshLayout = view.findViewById(R.id.sports_refresh);
-        sportsNewsList = view.findViewById(R.id.sports_news_list);
+        worldNewsList = view.findViewById(R.id.world_news_list);
 
         //user interactive views
         loadSpin = view.findViewById(R.id.loadSpin);
         EmptyStateTextView = view.findViewById(R.id.emptyView);
 
-        sportsNewsList.animate().alpha(0.1f).setDuration(400);
+        swipeRefreshLayout = view.findViewById(R.id.world_refresh);
+        worldNewsList.animate().alpha(0.1f).setDuration(400);
 
         //initiate CustomAdapter and set it for worldNewsList
-        sportsNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
-        sportsNewsList.setAdapter(sportsNewsAdapter);
+        worldNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
+        worldNewsList.setAdapter(worldNewsAdapter);
 
         //set empty text view for a proper msg to user
-        sportsNewsList.setEmptyView(EmptyStateTextView);
+        worldNewsList.setEmptyView(EmptyStateTextView);
 
-        /** URL to fetch data for Sports News**/
-        Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
-        sportsUri = baseUri.buildUpon();
+        /** URL to fetch data for World news**/
+        Uri baseUri = Uri.parse("https://content.guardianapis.com/world");
+        worldUri = baseUri.buildUpon();
 
-        sportsUri.appendQueryParameter("q", "sports");
-        sportsUri.appendQueryParameter("format", "json");
-        sportsUri.appendQueryParameter("page-size", "8");
-        sportsUri.appendQueryParameter("from-date", "2018-01-01");
-        sportsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
-        sportsUri.appendQueryParameter("show-tags", "contributor");
-        sportsUri.appendQueryParameter("api-key", API_KEY);
+        worldUri.appendQueryParameter("show-editors-picks", "true");
+        worldUri.appendQueryParameter("format", "json");
+        worldUri.appendQueryParameter("from-date", "2017-03-01");
+        worldUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        worldUri.appendQueryParameter("show-tags", "contributor");
+        worldUri.appendQueryParameter("api-key", API_KEY);
 
         loaderManager = getActivity().getSupportLoaderManager();
 
         //this is to prevent loader from re-fetching the data
-        if (sportsNewsAdapter.getCount() == 0 && checkNet()) {
+        if (worldNewsAdapter.getCount() == 0 && checkNet()) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
             EmptyStateTextView.setText(R.string.no_network);
         }
 
-        sportsNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        worldNewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsData currentData = sportsNewsAdapter.getItem(position);
+                NewsData currentData = worldNewsAdapter.getItem(position);
 
                 if (currentData != null) {
 
@@ -131,7 +135,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
             public void onRefresh() {
                 EmptyStateTextView.setText("");
 
-                SPORTS_NEWS_LOADER += 1;
+                WORLD_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
                 if (checkNet()) {
@@ -141,7 +145,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
                     EmptyStateTextView.setText(R.string.no_network);
                 }
 
-                destroyLoader(SPORTS_NEWS_LOADER - 1);
+                destroyLoader(WORLD_NEWS_LOADER - 1);
 
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -154,7 +158,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         try {
-            outState.putInt("CURRENT_SCROLL", sportsNewsList.getFirstVisiblePosition());
+            outState.putInt("CURRENT_SCROLL", worldNewsList.getFirstVisiblePosition());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,13 +169,13 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
             scrollState = savedInstanceState.getInt("CURRENT_SCROLL");
-            sportsNewsList.setSelection(scrollState);
+            worldNewsList.setSelection(scrollState);
         }
     }
 
     //Initiate and destroy loader methods to be called after search is submitted
     private void executeLoader() {
-        loaderManager.initLoader(SPORTS_NEWS_LOADER, null, this);
+        loaderManager.initLoader(WORLD_NEWS_LOADER, null, this);
     }
 
     private void destroyLoader(int id) {
@@ -181,7 +185,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     @NonNull
     @Override
     public Loader<ArrayList<NewsData>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new NewsLoader(getActivity(), sportsUri.toString());
+        return new NewsLoader(getActivity(), worldUri.toString());
     }
 
     @Override
@@ -189,20 +193,20 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         EmptyStateTextView.setText(R.string.no_news);
 
         // Clear the adapter of previous books data
-        sportsNewsAdapter.clear();
+        worldNewsAdapter.clear();
 
         loadSpin.setVisibility(View.GONE);
 
         if (news != null && !news.isEmpty()) {
-            sportsNewsAdapter.addAll(news);
-            sportsNewsList.animate().alpha(1.0f).setDuration(400);
-            sportsNewsList.setSelection(scrollState);
+            worldNewsAdapter.addAll(news);
+            worldNewsList.animate().alpha(1.0f).setDuration(400);
+            worldNewsList.setSelection(scrollState);
         }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<NewsData>> loader) {
-        sportsNewsAdapter.clear();
+        worldNewsAdapter.clear();
     }
 
     //Check internet is connected or not, to notify user

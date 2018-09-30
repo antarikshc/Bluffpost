@@ -1,4 +1,4 @@
-package com.antarikshc.theguardiannews;
+package com.antarikshc.theguardiannews.ui;
 
 import android.animation.LayoutTransition;
 import android.content.Context;
@@ -21,6 +21,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import com.antarikshc.theguardiannews.R;
 
 public class MainActivity extends AppCompatActivity {
 
