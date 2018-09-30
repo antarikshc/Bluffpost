@@ -1,9 +1,6 @@
 package com.antarikshc.theguardiannews.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +19,7 @@ import android.widget.TextView;
 import com.antarikshc.theguardiannews.R;
 import com.antarikshc.theguardiannews.datasource.NewsLoader;
 import com.antarikshc.theguardiannews.model.NewsData;
+import com.antarikshc.theguardiannews.util.Master;
 
 import java.util.ArrayList;
 
@@ -89,7 +87,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         loaderManager = getSupportLoaderManager();
 
-        if (checkNet() && searchNewsAdapter.getCount() == 0) {
+        if (Master.checkNet(SearchActivity.this) && searchNewsAdapter.getCount() == 0) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
@@ -132,7 +130,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 SEARCH_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
-                if (checkNet()) {
+                if (Master.checkNet(SearchActivity.this)) {
                     executeLoader();
                 } else {
                     loadSpin.setVisibility(View.GONE);
@@ -207,17 +205,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoaderReset(@NonNull Loader<ArrayList<NewsData>> loader) {
         searchNewsAdapter.clear();
-    }
-
-    //Check internet is connected or not, to notify user
-    public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
 }

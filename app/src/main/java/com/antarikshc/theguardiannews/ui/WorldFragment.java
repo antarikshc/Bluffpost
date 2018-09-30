@@ -1,9 +1,6 @@
 package com.antarikshc.theguardiannews.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +20,7 @@ import android.widget.TextView;
 import com.antarikshc.theguardiannews.R;
 import com.antarikshc.theguardiannews.datasource.NewsLoader;
 import com.antarikshc.theguardiannews.model.NewsData;
+import com.antarikshc.theguardiannews.util.Master;
 
 import java.util.ArrayList;
 
@@ -95,7 +93,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         loaderManager = getActivity().getSupportLoaderManager();
 
         //this is to prevent loader from re-fetching the data
-        if (worldNewsAdapter.getCount() == 0 && checkNet()) {
+        if (worldNewsAdapter.getCount() == 0 && Master.checkNet(getContext())) {
             executeLoader();
         } else {
             loadSpin.setVisibility(View.GONE);
@@ -138,7 +136,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
                 WORLD_NEWS_LOADER += 1;
                 swipeRefreshLayout.setRefreshing(true);
 
-                if (checkNet()) {
+                if (Master.checkNet(getContext())) {
                     executeLoader();
                 } else {
                     loadSpin.setVisibility(View.GONE);
@@ -209,13 +207,4 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         worldNewsAdapter.clear();
     }
 
-    //Check internet is connected or not, to notify user
-    public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
 }

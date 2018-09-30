@@ -1,10 +1,7 @@
 package com.antarikshc.theguardiannews.ui;
 
 import android.animation.LayoutTransition;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -23,6 +20,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.antarikshc.theguardiannews.R;
+import com.antarikshc.theguardiannews.util.Master;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,19 +31,17 @@ public class MainActivity extends AppCompatActivity {
      **/
     private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
 
-    /**
-     * global declarations
-     **/
+    // Global params
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
-    SearchView searchView;
-    LinearLayout searchBar;
-    MenuItem item;
+    private SearchView searchView;
+    private LinearLayout searchBar;
+    private MenuItem item;
 
-    WorldFragment tab1;
-    PoliticsFragment tab2;
-    SportsFragment tab3;
+    private WorldFragment tab1;
+    private PoliticsFragment tab2;
+    private SportsFragment tab3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                if (checkNet()) {
+                if (Master.checkNet(MainActivity.this)) {
 
                     item.collapseActionView();
 
@@ -179,13 +176,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Check internet is connected or not, to notify user
-    public boolean checkNet() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
 }
