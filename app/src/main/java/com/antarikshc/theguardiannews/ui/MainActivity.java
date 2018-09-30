@@ -26,11 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = MainActivity.class.getName();
 
-    /**
-     * API KEY
-     **/
-    private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
-
     // Global params
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -91,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     searchBar.clearFocus();
 
                     //create URL for the search query
-                    Uri baseUri = Uri.parse("https://content.guardianapis.com/search");
-                    Uri.Builder uriBuilder = baseUri.buildUpon();
+                    Uri.Builder uriBuilder = Master.getSearchUri();
 
                     uriBuilder.appendQueryParameter("q", query);
                     uriBuilder.appendQueryParameter("format", "json");
@@ -100,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     uriBuilder.appendQueryParameter("from-date", "2017-01-01");
                     uriBuilder.appendQueryParameter("show-fields", "thumbnail,headline,byline");
                     uriBuilder.appendQueryParameter("show-tags", "contributor");
-                    uriBuilder.appendQueryParameter("api-key", API_KEY);
+                    uriBuilder.appendQueryParameter("api-key", Master.getAPIKey());
 
                     Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
                     searchIntent.putExtra("title", query);

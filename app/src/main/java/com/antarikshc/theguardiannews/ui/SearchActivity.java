@@ -25,22 +25,19 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
-    /**
-     * global declarations
-     **/
-    Intent searchIntent;
-    String SEARCH_NEWS_URL;
+    // Global params
+    private Intent searchIntent;
+    private String SEARCH_NEWS_URL;
 
-    int scrollState;
-
-    Toolbar toolbar;
-    ListView searchNewsList;
+    private int scrollState;
+    private Toolbar toolbar;
+    private ListView searchNewsList;
     private CustomAdapter searchNewsAdapter;
     private TextView EmptyStateTextView;
-    ProgressBar loadSpin;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadSpin;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    LoaderManager loaderManager;
+    private LoaderManager loaderManager;
 
     //we are using different loaders for each tab
     private static int SEARCH_NEWS_LOADER = 30;

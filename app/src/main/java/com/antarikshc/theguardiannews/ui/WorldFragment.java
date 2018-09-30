@@ -26,29 +26,21 @@ import java.util.ArrayList;
 
 public class WorldFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
-    /**
-     * API KEY
-     **/
-    private static String API_KEY = "753d66b9-55a1-4196-bc18-57c05d86c5ce";
-
-    //we are using different loaders for each tab
+    // we are using different loaders for each tab
     private static int WORLD_NEWS_LOADER = 1;
 
-    /**
-     * global declarations
-     **/
-    View view;
+    // Global Params
+    private View view;
 
-    int scrollState;
-
-    ListView worldNewsList;
+    private int scrollState;
+    private ListView worldNewsList;
     private CustomAdapter worldNewsAdapter;
     private TextView EmptyStateTextView;
-    ProgressBar loadSpin;
-    Uri.Builder worldUri;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadSpin;
+    private Uri.Builder worldUri;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    LoaderManager loaderManager;
+    private LoaderManager loaderManager;
 
     @Nullable
     @Override
@@ -79,16 +71,15 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         //set empty text view for a proper msg to user
         worldNewsList.setEmptyView(EmptyStateTextView);
 
-        /** URL to fetch data for World news**/
-        Uri baseUri = Uri.parse("https://content.guardianapis.com/world");
-        worldUri = baseUri.buildUpon();
+        // URL to fetch data for World news
+        worldUri = Master.getWorldUri();
 
         worldUri.appendQueryParameter("show-editors-picks", "true");
         worldUri.appendQueryParameter("format", "json");
         worldUri.appendQueryParameter("from-date", "2017-03-01");
         worldUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
         worldUri.appendQueryParameter("show-tags", "contributor");
-        worldUri.appendQueryParameter("api-key", API_KEY);
+        worldUri.appendQueryParameter("api-key", Master.getAPIKey());
 
         loaderManager = getActivity().getSupportLoaderManager();
 
