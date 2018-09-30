@@ -6,46 +6,46 @@
     android:background="@drawable/custom_list_border">
 
     <ImageView
-        android:id="@+id/coverImage"
+        android:id="@+id/cover_image"
         android:layout_width="350dp"
         android:layout_height="180dp"
         android:paddingEnd="10dp"
         android:scaleType="fitXY" />
 
     <TextView
-        android:id="@+id/txtTitle"
+        android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/coverImage"
+        android:layout_toEndOf="@+id/cover_image"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="6"
         android:textSize="22sp" />
 
     <TextView
-        android:id="@+id/txtAuthor"
+        android:id="@+id/txt_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/coverImage"
-        android:layout_below="@+id/txtTitle"
+        android:layout_below="@+id/txt_title"
+        android:layout_toEndOf="@+id/cover_image"
         android:textColor="@color/secondary_text"
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/txtCat"
+        android:id="@+id/txt_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/coverImage"
-        android:layout_toEndOf="@+id/coverImage"
+        android:layout_alignBottom="@+id/cover_image"
+        android:layout_toEndOf="@+id/cover_image"
         android:textColor="@color/secondary_text"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/txtTime"
+        android:id="@+id/txt_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/coverImage"
+        android:layout_alignBottom="@+id/cover_image"
         android:layout_alignParentEnd="true"
         android:textColor="@color/secondary_text"
         android:textSize="14sp" />

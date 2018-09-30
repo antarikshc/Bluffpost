@@ -58,7 +58,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <TextView
-            android:id="@+id/emptyView"
+            android:id="@+id/empty_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -66,7 +66,7 @@
             android:visibility="gone" />
 
         <ProgressBar
-            android:id="@+id/loadSpin"
+            android:id="@+id/load_spin"
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="60dp"
             android:layout_height="60dp"
