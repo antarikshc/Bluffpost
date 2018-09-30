@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Setting up Search bar in Toolbar
+     *
+     * @param menu Search item
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -72,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         searchBar = searchView.findViewById(searchBarId);
         searchBar.setLayoutTransition(new LayoutTransition());
 
+        // Setup Query listener to perform searching operation
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -80,12 +86,12 @@ public class MainActivity extends AppCompatActivity {
 
                     item.collapseActionView();
 
-                    //Clear focus so that search bar can be translated back up top
+                    // Clear focus so that search bar can be translated back up top
                     searchView.setQuery("", false);
                     searchView.clearFocus();
                     searchBar.clearFocus();
 
-                    //create URL for the search query
+                    // Create URL for the search query
                     Uri.Builder uriBuilder = Master.getSearchUri();
 
                     uriBuilder.appendQueryParameter("q", query);
@@ -137,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.requestFocus();
     }
 
+    /**
+     * Boilerplate to setup Tabs
+     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {

@@ -54,32 +54,13 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        swipeRefreshLayout = view.findViewById(R.id.sports_refresh);
-        sportsNewsList = view.findViewById(R.id.sports_news_list);
+        initializeViews(view);
 
-        //user interactive views
-        loadSpin = view.findViewById(R.id.load_spin);
-        EmptyStateTextView = view.findViewById(R.id.empty_view);
-
-        sportsNewsList.animate().alpha(0.1f).setDuration(400);
-
-        //initiate CustomAdapter and set it for worldNewsList
-        sportsNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
-        sportsNewsList.setAdapter(sportsNewsAdapter);
-
-        //set empty text view for a proper msg to user
-        sportsNewsList.setEmptyView(EmptyStateTextView);
+        setupNewsList();
 
         // URL to fetch data for Sports News
         sportsUri = Master.getSearchUri();
-
-        sportsUri.appendQueryParameter("q", "sports");
-        sportsUri.appendQueryParameter("format", "json");
-        sportsUri.appendQueryParameter("page-size", "8");
-        sportsUri.appendQueryParameter("from-date", "2018-01-01");
-        sportsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
-        sportsUri.appendQueryParameter("show-tags", "contributor");
-        sportsUri.appendQueryParameter("api-key", Master.getAPIKey());
+        buildUriParams();
 
         loaderManager = getActivity().getSupportLoaderManager();
 
@@ -142,7 +123,46 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
 
     }
 
-    //This is to prevent listview losing the scroll position
+    /**
+     * Add URL params to call API
+     */
+    private void buildUriParams() {
+        sportsUri.appendQueryParameter("q", "sports");
+        sportsUri.appendQueryParameter("format", "json");
+        sportsUri.appendQueryParameter("page-size", "8");
+        sportsUri.appendQueryParameter("from-date", "2018-01-01");
+        sportsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        sportsUri.appendQueryParameter("show-tags", "contributor");
+        sportsUri.appendQueryParameter("api-key", Master.getAPIKey());
+    }
+
+    /**
+     * Initiate News List View, Adapter and add animation
+     * Set Empty View
+     */
+    private void setupNewsList() {
+        sportsNewsList.animate().alpha(0.1f).setDuration(400);
+
+        //initiate CustomAdapter and set it for worldNewsList
+        sportsNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
+        sportsNewsList.setAdapter(sportsNewsAdapter);
+
+        //set empty text view for a proper msg to user
+        sportsNewsList.setEmptyView(EmptyStateTextView);
+    }
+
+    private void initializeViews(@NonNull View view) {
+        swipeRefreshLayout = view.findViewById(R.id.sports_refresh);
+        sportsNewsList = view.findViewById(R.id.sports_news_list);
+
+        //user interactive views
+        loadSpin = view.findViewById(R.id.load_spin);
+        EmptyStateTextView = view.findViewById(R.id.empty_view);
+    }
+
+    /**
+     * This is to prevent ListView losing the scroll position
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -152,7 +172,6 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
             e.printStackTrace();
         }
     }
-
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -162,7 +181,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
-    //Initiate and destroy loader methods to be called after search is submitted
+    // Initiate and destroy loader methods to be called after search is submitted
     private void executeLoader() {
         loaderManager.initLoader(SPORTS_NEWS_LOADER, null, this);
     }

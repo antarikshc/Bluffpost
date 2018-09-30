@@ -54,32 +54,13 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        swipeRefreshLayout = view.findViewById(R.id.politics_refresh);
-        politicsNewsList = view.findViewById(R.id.politics_news_list);
+        initializeViews(view);
 
-        //user interactive views
-        loadSpin = view.findViewById(R.id.load_spin);
-        EmptyStateTextView = view.findViewById(R.id.empty_view);
-
-        politicsNewsList.animate().alpha(0.1f).setDuration(400);
-
-        //initiate CustomAdapter and set it for worldNewsList
-        politicsNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
-        politicsNewsList.setAdapter(politicsNewsAdapter);
-
-        //set empty text view for a proper msg to user
-        politicsNewsList.setEmptyView(EmptyStateTextView);
+        setupNewsList();
 
         // URL to fetch data for Politics News
         politicsUri = Master.getSearchUri();
-
-        politicsUri.appendQueryParameter("q", "politics");
-        politicsUri.appendQueryParameter("format", "json");
-        politicsUri.appendQueryParameter("page-size", "8");
-        politicsUri.appendQueryParameter("from-date", "2018-01-01");
-        politicsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
-        //politicsUri.appendQueryParameter("show-tags", "contributor");  -not getting results for politics with this tag
-        politicsUri.appendQueryParameter("api-key", Master.getAPIKey());
+        buildUriParams();
 
         loaderManager = getActivity().getSupportLoaderManager();
 
@@ -142,7 +123,45 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
-    //This is to prevent listview losing the scroll position
+    /**
+     * Add URL params to call API
+     */
+    private void buildUriParams() {
+        politicsUri.appendQueryParameter("q", "politics");
+        politicsUri.appendQueryParameter("format", "json");
+        politicsUri.appendQueryParameter("page-size", "8");
+        politicsUri.appendQueryParameter("from-date", "2018-01-01");
+        politicsUri.appendQueryParameter("show-fields", "thumbnail,headline,byline");
+        //politicsUri.appendQueryParameter("show-tags", "contributor");  -not getting results for politics with this tag
+        politicsUri.appendQueryParameter("api-key", Master.getAPIKey());
+    }
+
+    /**
+     * Initiate News List View, Adapter and add animation
+     * Set Empty View
+     */
+    private void setupNewsList() {
+        politicsNewsList.animate().alpha(0.1f).setDuration(400);
+        // Initiate CustomAdapter and set it for worldNewsList
+        politicsNewsAdapter = new CustomAdapter(getActivity().getApplicationContext(), new ArrayList<NewsData>());
+        politicsNewsList.setAdapter(politicsNewsAdapter);
+
+        //set empty text view for a proper msg to user
+        politicsNewsList.setEmptyView(EmptyStateTextView);
+    }
+
+    private void initializeViews(@NonNull View view) {
+        swipeRefreshLayout = view.findViewById(R.id.politics_refresh);
+        politicsNewsList = view.findViewById(R.id.politics_news_list);
+
+        //user interactive views
+        loadSpin = view.findViewById(R.id.load_spin);
+        EmptyStateTextView = view.findViewById(R.id.empty_view);
+    }
+
+    /**
+     * This is to prevent ListView losing the scroll position
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -152,7 +171,6 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
             e.printStackTrace();
         }
     }
-
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -162,7 +180,7 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
-    //Initiate and destroy loader methods to be called after search is submitted
+    // Initiate and destroy loader methods to be called after search is submitted
     private void executeLoader() {
         loaderManager.initLoader(POLITICS_NEWS_LOADER, null, this);
     }
