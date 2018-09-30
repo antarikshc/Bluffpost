@@ -49,11 +49,11 @@ public class CustomAdapter extends ArrayAdapter<NewsData> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.custom_list, parent, false);
-            viewHolder.coverImage = convertView.findViewById(R.id.coverImage);
-            viewHolder.txtTitle = convertView.findViewById(R.id.txtTitle);
-            viewHolder.txtAuthor = convertView.findViewById(R.id.txtAuthor);
-            viewHolder.txtTime = convertView.findViewById(R.id.txtTime);
-            viewHolder.txtCat = convertView.findViewById(R.id.txtCat);
+            viewHolder.coverImage = convertView.findViewById(R.id.cover_image);
+            viewHolder.txtTitle = convertView.findViewById(R.id.txt_title);
+            viewHolder.txtAuthor = convertView.findViewById(R.id.txt_author);
+            viewHolder.txtTime = convertView.findViewById(R.id.txt_time);
+            viewHolder.txtCat = convertView.findViewById(R.id.txt_category);
 
             result = convertView;
             convertView.setTag(viewHolder);

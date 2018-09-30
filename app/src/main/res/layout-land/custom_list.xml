@@ -1,53 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:background="@drawable/custom_list_border">
 
     <ImageView
-        android:id="@+id/coverImage"
-        android:layout_width="350dp"
+        android:id="@+id/cover_image"
+        android:layout_width="0dp"
         android:layout_height="180dp"
         android:paddingEnd="10dp"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        app:layout_constraintDimensionRatio="W,16:9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtTitle"
-        android:layout_width="match_parent"
+        android:id="@+id/txt_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/coverImage"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@+id/cover_image"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="6"
-        android:textSize="22sp" />
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cover_image"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtAuthor"
+        android:id="@+id/txt_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/coverImage"
-        android:layout_below="@+id/txtTitle"
+        android:layout_below="@+id/txt_title"
+        android:layout_toEndOf="@+id/cover_image"
         android:textColor="@color/secondary_text"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/cover_image"
+        app:layout_constraintTop_toBottomOf="@+id/txt_title" />
 
     <TextView
-        android:id="@+id/txtCat"
+        android:id="@+id/txt_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/coverImage"
-        android:layout_toEndOf="@+id/coverImage"
+        android:layout_alignBottom="@+id/cover_image"
+        android:layout_marginBottom="2dp"
+        android:layout_toEndOf="@+id/cover_image"
         android:textColor="@color/secondary_text"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cover_image"
+        app:layout_constraintStart_toEndOf="@+id/cover_image" />
 
     <TextView
-        android:id="@+id/txtTime"
+        android:id="@+id/txt_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/coverImage"
+        android:layout_alignBottom="@+id/cover_image"
         android:layout_alignParentEnd="true"
+        android:layout_marginBottom="2dp"
         android:textColor="@color/secondary_text"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/cover_image"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</android.widget.RelativeLayout>
+</android.support.constraint.ConstraintLayout>

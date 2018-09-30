@@ -68,8 +68,8 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
         politicsNewsList = view.findViewById(R.id.politics_news_list);
 
         //user interactive views
-        loadSpin = view.findViewById(R.id.loadSpin);
-        EmptyStateTextView = view.findViewById(R.id.emptyView);
+        loadSpin = view.findViewById(R.id.load_spin);
+        EmptyStateTextView = view.findViewById(R.id.empty_view);
 
         politicsNewsList.animate().alpha(0.1f).setDuration(400);
 

@@ -68,8 +68,8 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         sportsNewsList = view.findViewById(R.id.sports_news_list);
 
         //user interactive views
-        loadSpin = view.findViewById(R.id.loadSpin);
-        EmptyStateTextView = view.findViewById(R.id.emptyView);
+        loadSpin = view.findViewById(R.id.load_spin);
+        EmptyStateTextView = view.findViewById(R.id.empty_view);
 
         sportsNewsList.animate().alpha(0.1f).setDuration(400);
 

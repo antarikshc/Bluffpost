@@ -58,8 +58,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         searchNewsList = findViewById(R.id.search_news_list);
 
         //user interactive views
-        loadSpin = findViewById(R.id.loadSpin);
-        EmptyStateTextView = findViewById(R.id.emptyView);
+        loadSpin = findViewById(R.id.load_spin);
+        EmptyStateTextView = findViewById(R.id.empty_view);
 
         searchIntent = getIntent();
 
