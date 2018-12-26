@@ -142,6 +142,8 @@ public class ConnectAPI {
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
+            Log.i("JSON ", "Response: " + jsonResponse);
+
             JSONObject root = new JSONObject(jsonResponse);
 
             JSONObject response = root.getJSONObject("response");
@@ -204,11 +206,7 @@ public class ConnectAPI {
                     title = newsItem.getString("webTitle");
                 }
 
-                if (newsItem.has("tags") && !newsItem.isNull("tags")) {
-                    JSONArray tags = newsItem.getJSONArray("tags");
-                    JSONObject tagsObject = tags.getJSONObject(0);
-                    author = tagsObject.getString("webTitle");
-                } else if (fields.has("byline") && !fields.isNull("byline")) {
+                if (fields.has("byline") && !fields.isNull("byline")) {
                     author = fields.getString("byline");
                 }
 
