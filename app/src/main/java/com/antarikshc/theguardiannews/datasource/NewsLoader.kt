@@ -1,15 +1,12 @@
 package com.antarikshc.theguardiannews.datasource
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
-
 import com.antarikshc.theguardiannews.model.NewsData
 import com.antarikshc.theguardiannews.util.ConnectAPI
-
-import java.util.ArrayList
+import java.util.*
 
 class NewsLoader(context: Context, private val mUrl: String?) :
-        AsyncTaskLoader<ArrayList<NewsData>>(context) {
+        androidx.loader.content.AsyncTaskLoader<ArrayList<NewsData>>(context) {
 
     override fun onStartLoading() {
         forceLoad()
