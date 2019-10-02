@@ -3,26 +3,24 @@ package com.antarikshc.theguardiannews.ui
 import android.animation.LayoutTransition
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.widget.LinearLayout
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.util.Master
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     // Global params
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
-    private lateinit var mViewPager: ViewPager
+    private lateinit var mViewPager: androidx.viewpager.widget.ViewPager
     private lateinit var tab1: WorldFragment
     private lateinit var tab2: PoliticsFragment
     private lateinit var tab3: SportsFragment
@@ -129,9 +127,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Boilerplate to setup Tabs
      */
-    inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-
-        override fun getItem(position: Int): Fragment? {
+    inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
+        override fun getItem(position: Int): Fragment {
             when (position) {
                 0 -> {
                     tab1 = WorldFragment()
@@ -148,13 +145,13 @@ class MainActivity : AppCompatActivity() {
                     tab3.retainInstance = true
                     return tab3
                 }
-                else -> return null
+                // Default fragment = World Fragment
+                else -> return WorldFragment()
             }
         }
 
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
-        }
+        // Hardcoding, because 3 tabs
+        override fun getCount(): Int = 3
+
     }
 }

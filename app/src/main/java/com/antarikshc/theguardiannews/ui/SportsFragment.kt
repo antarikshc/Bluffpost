@@ -3,13 +3,12 @@ package com.antarikshc.theguardiannews.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.fragment.app.Fragment
+import androidx.loader.app.LoaderManager
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.datasource.NewsLoader
 import com.antarikshc.theguardiannews.model.NewsData
@@ -144,11 +143,11 @@ class SportsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsD
         loaderManager.destroyLoader(id)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<ArrayList<NewsData>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): androidx.loader.content.Loader<ArrayList<NewsData>> {
         return NewsLoader(activity!!, sportsUri.toString())
     }
 
-    override fun onLoadFinished(loader: Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
+    override fun onLoadFinished(loader: androidx.loader.content.Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
         empty_view.setText(R.string.no_news)
 
         // Clear the adapter of previous books data
@@ -163,7 +162,7 @@ class SportsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsD
         }
     }
 
-    override fun onLoaderReset(loader: Loader<ArrayList<NewsData>>) {
+    override fun onLoaderReset(loader: androidx.loader.content.Loader<ArrayList<NewsData>>) {
         sportsNewsAdapter.clear()
     }
 

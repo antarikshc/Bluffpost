@@ -3,11 +3,9 @@ package com.antarikshc.theguardiannews.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.AdapterView
+import androidx.appcompat.app.AppCompatActivity
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.datasource.NewsLoader
 import com.antarikshc.theguardiannews.model.NewsData
@@ -15,13 +13,13 @@ import com.antarikshc.theguardiannews.util.Master
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_search.*
 
-class SearchActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
+class SearchActivity : AppCompatActivity(), androidx.loader.app.LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
     // Global params
     private var searchNewsUrl: String? = null
 
     private var scrollState = 0
-    private var loaderManager: LoaderManager? = null
+    private var loaderManager: androidx.loader.app.LoaderManager? = null
 
     private lateinit var searchNewsAdapter: CustomAdapter
 
@@ -139,11 +137,11 @@ class SearchActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<ArrayL
         loaderManager?.destroyLoader(id)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<ArrayList<NewsData>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): androidx.loader.content.Loader<ArrayList<NewsData>> {
         return NewsLoader(this, searchNewsUrl)
     }
 
-    override fun onLoadFinished(loader: Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
+    override fun onLoadFinished(loader: androidx.loader.content.Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
         empty_view.setText(R.string.no_news)
 
         // Clear the adapter of previous books data
@@ -158,7 +156,7 @@ class SearchActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<ArrayL
         }
     }
 
-    override fun onLoaderReset(loader: Loader<ArrayList<NewsData>>) {
+    override fun onLoaderReset(loader: androidx.loader.content.Loader<ArrayList<NewsData>>) {
         searchNewsAdapter.clear()
     }
 
