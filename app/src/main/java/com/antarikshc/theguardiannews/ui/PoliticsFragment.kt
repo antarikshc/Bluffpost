@@ -13,6 +13,7 @@ import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.datasource.NewsLoader
 import com.antarikshc.theguardiannews.model.NewsData
 import com.antarikshc.theguardiannews.util.Master
+import com.antarikshc.theguardiannews.util.openBrowser
 import kotlinx.android.synthetic.main.politics_fragment.*
 
 class PoliticsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
@@ -22,7 +23,6 @@ class PoliticsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<New
     private lateinit var politicsNewsAdapter: CustomAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         return inflater.inflate(R.layout.politics_fragment, container, false)
     }
 
@@ -43,31 +43,7 @@ class PoliticsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<New
         }
 
         politics_news_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val currentData = politicsNewsAdapter.getItem(position)
-
-            if (currentData != null) {
-
-                try {
-
-                    //Explicit Intent
-                    val webActivityIntent = Intent(context, WebviewActivity::class.java)
-                    webActivityIntent.putExtra("url", currentData.webUrl)
-                    startActivity(webActivityIntent)
-
-                } catch (e: Exception) {
-
-                    //Implicit Intent
-                    val webUri = Uri.parse(currentData.webUrl)
-                    val webBrowserIntent = Intent(Intent.ACTION_VIEW, webUri)
-
-                    activity?.run {
-                        if (webBrowserIntent.resolveActivity(packageManager) != null) {
-                            startActivity(webBrowserIntent)
-                        }
-                    }
-                }
-
-            }
+            activity?.openBrowser(politicsNewsAdapter.getItem(position))
         }
 
         politics_refresh.setOnRefreshListener {
