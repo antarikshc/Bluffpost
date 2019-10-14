@@ -1,7 +1,5 @@
 package com.antarikshc.theguardiannews.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.datasource.NewsLoader
 import com.antarikshc.theguardiannews.model.NewsData
 import com.antarikshc.theguardiannews.util.Master
 import com.antarikshc.theguardiannews.util.Master.searchUri
+import com.antarikshc.theguardiannews.util.openBrowser
 import kotlinx.android.synthetic.main.sports_fragment.*
 
 class SportsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
@@ -23,7 +23,6 @@ class SportsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsD
     private lateinit var sportsNewsAdapter: CustomAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         return inflater.inflate(R.layout.sports_fragment, container, false)
     }
 
@@ -44,25 +43,7 @@ class SportsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsD
         }
 
         sports_news_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val currentData = sportsNewsAdapter.getItem(position)
-
-            if (currentData != null) {
-                try {
-                    //Explicit Intent
-                    val webActivityIntent = Intent(context, WebviewActivity::class.java)
-                    webActivityIntent.putExtra("url", currentData.webUrl)
-                    startActivity(webActivityIntent)
-                } catch (e: Exception) {
-                    //Implicit Intent
-                    val webUri = Uri.parse(currentData.webUrl)
-                    val webBrowserIntent = Intent(Intent.ACTION_VIEW, webUri)
-                    activity?.run {
-                        if (webBrowserIntent.resolveActivity(packageManager) != null) {
-                            startActivity(webBrowserIntent)
-                        }
-                    }
-                }
-            }
+            activity?.openBrowser(sportsNewsAdapter.getItem(position))
         }
 
         sports_refresh.setOnRefreshListener {
@@ -143,11 +124,11 @@ class SportsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsD
         loaderManager.destroyLoader(id)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): androidx.loader.content.Loader<ArrayList<NewsData>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<ArrayList<NewsData>> {
         return NewsLoader(activity!!, sportsUri.toString())
     }
 
-    override fun onLoadFinished(loader: androidx.loader.content.Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
+    override fun onLoadFinished(loader: Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
         empty_view.setText(R.string.no_news)
 
         // Clear the adapter of previous books data
@@ -162,12 +143,11 @@ class SportsFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsD
         }
     }
 
-    override fun onLoaderReset(loader: androidx.loader.content.Loader<ArrayList<NewsData>>) {
+    override fun onLoaderReset(loader: Loader<ArrayList<NewsData>>) {
         sportsNewsAdapter.clear()
     }
 
     companion object {
-
         // Books loaded ID, default = 1 currently using single Loader
         private var SPORTS_NEWS_LOADER = 50
         private val sportsUri = searchUri

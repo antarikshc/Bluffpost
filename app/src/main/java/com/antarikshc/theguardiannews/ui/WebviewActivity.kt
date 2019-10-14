@@ -1,5 +1,6 @@
 package com.antarikshc.theguardiannews.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_webview.*
 
 class WebviewActivity : AppCompatActivity() {
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webview)

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.util.Master
 import com.google.android.material.tabs.TabLayout
@@ -21,9 +22,7 @@ class MainActivity : AppCompatActivity() {
     // Global params
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private lateinit var mViewPager: androidx.viewpager.widget.ViewPager
-    private lateinit var tab1: WorldFragment
-    private lateinit var tab2: PoliticsFragment
-    private lateinit var tab3: SportsFragment
+    private val tabs: Array<Fragment> = arrayOf(WorldFragment(), PoliticsFragment(), SportsFragment())
     private lateinit var searchView: SearchView
     private lateinit var searchBar: LinearLayout
 
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         val mViewPagerLayout = container
         mViewPagerLayout.adapter = mSectionsPagerAdapter
 
-        val tabLayout = tabs
+        val tabLayout = tabLayout
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
         tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(mViewPagerLayout))
@@ -89,8 +88,8 @@ class MainActivity : AppCompatActivity() {
                     uriBuilder.appendQueryParameter("api-key", Master.apiKey)
 
                     val searchIntent = Intent(applicationContext, SearchActivity::class.java)
-                    searchIntent.putExtra("title", query)
-                    searchIntent.putExtra("url", uriBuilder.toString())
+                            .putExtra("title", query)
+                            .putExtra("url", uriBuilder.toString())
                     startActivity(searchIntent)
 
                 } else {
@@ -127,31 +126,15 @@ class MainActivity : AppCompatActivity() {
     /**
      * Boilerplate to setup Tabs
      */
-    inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
+    inner class SectionsPagerAdapter internal constructor(manager: FragmentManager)
+        : FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
         override fun getItem(position: Int): Fragment {
-            when (position) {
-                0 -> {
-                    tab1 = WorldFragment()
-                    tab1.retainInstance = true
-                    return tab1
-                }
-                1 -> {
-                    tab2 = PoliticsFragment()
-                    tab2.retainInstance = true
-                    return tab2
-                }
-                2 -> {
-                    tab3 = SportsFragment()
-                    tab3.retainInstance = true
-                    return tab3
-                }
-                // Default fragment = World Fragment
-                else -> return WorldFragment()
-            }
+            tabs[position].retainInstance = true
+            return tabs[position]
         }
 
         // Hardcoding, because 3 tabs
-        override fun getCount(): Int = 3
-
+        override fun getCount(): Int = tabs.size
     }
 }

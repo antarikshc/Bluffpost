@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.model.NewsData
-
-import java.util.ArrayList
+import java.util.*
 
 class CustomAdapter(
         mContext: Context,
@@ -38,7 +36,6 @@ class CustomAdapter(
             viewHolder.txtAuthor = view.findViewById(R.id.txt_author)
             viewHolder.txtTime = view.findViewById(R.id.txt_time)
             viewHolder.txtCat = view.findViewById(R.id.txt_category)
-
             view.tag = viewHolder
             view
         } else {
@@ -70,12 +67,10 @@ class CustomAdapter(
     private fun getRelativeTime(timeInMillis: Long): String {
         val now = System.currentTimeMillis()
         val difference = now - timeInMillis
-        val relativeTime = if (difference < 86400001) {
-            DateUtils.getRelativeTimeSpanString(timeInMillis, now, DateUtils.MINUTE_IN_MILLIS)
+        return DateUtils.getRelativeTimeSpanString(timeInMillis, now, if (difference < 86400001) {
+            DateUtils.MINUTE_IN_MILLIS
         } else {
-            DateUtils.getRelativeTimeSpanString(timeInMillis, now, DateUtils.DAY_IN_MILLIS)
-        }
-
-        return "$relativeTime"
+            DateUtils.DAY_IN_MILLIS
+        }).toString()
     }
 }

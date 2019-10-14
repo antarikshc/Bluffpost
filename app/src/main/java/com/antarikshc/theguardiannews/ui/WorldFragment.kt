@@ -1,7 +1,5 @@
 package com.antarikshc.theguardiannews.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.datasource.NewsLoader
 import com.antarikshc.theguardiannews.model.NewsData
 import com.antarikshc.theguardiannews.util.Master
+import com.antarikshc.theguardiannews.util.openBrowser
 import kotlinx.android.synthetic.main.world_fragment.*
 
 class WorldFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
@@ -34,8 +34,6 @@ class WorldFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsDa
         // URL to fetch data for World news
         buildUriParams()
 
-        // loaderManager = activity?.supportLoaderManager
-
         //this is to prevent loader from re-fetching the data
         if (worldNewsAdapter.count == 0 && Master.checkNet(context)) {
             executeLoader()
@@ -45,25 +43,7 @@ class WorldFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsDa
         }
 
         world_news_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val currentData = worldNewsAdapter.getItem(position)
-
-            if (currentData != null) {
-                try {
-                    //Explicit Intent
-                    val webActivityIntent = Intent(context, WebviewActivity::class.java)
-                    webActivityIntent.putExtra("url", currentData.webUrl)
-                    startActivity(webActivityIntent)
-                } catch (e: Exception) {
-                    //Implicit Intent
-                    val webUri = Uri.parse(currentData.webUrl)
-                    val webBrowserIntent = Intent(Intent.ACTION_VIEW, webUri)
-                    activity?.run {
-                        if (webBrowserIntent.resolveActivity(packageManager) != null) {
-                            startActivity(webBrowserIntent)
-                        }
-                    }
-                }
-            }
+            activity?.openBrowser(worldNewsAdapter.getItem(position))
         }
 
         world_refresh.setOnRefreshListener {
@@ -125,7 +105,6 @@ class WorldFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsDa
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -145,11 +124,11 @@ class WorldFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsDa
         loaderManager.destroyLoader(id)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): androidx.loader.content.Loader<ArrayList<NewsData>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<ArrayList<NewsData>> {
         return NewsLoader(activity!!, worldUri.toString())
     }
 
-    override fun onLoadFinished(loader: androidx.loader.content.Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
+    override fun onLoadFinished(loader: Loader<ArrayList<NewsData>>, news: ArrayList<NewsData>?) {
         empty_view.setText(R.string.no_news)
 
         // Clear the adapter of previous books data
@@ -164,7 +143,7 @@ class WorldFragment : Fragment(), LoaderManager.LoaderCallbacks<ArrayList<NewsDa
         }
     }
 
-    override fun onLoaderReset(loader: androidx.loader.content.Loader<ArrayList<NewsData>>) {
+    override fun onLoaderReset(loader: Loader<ArrayList<NewsData>>) {
         worldNewsAdapter.clear()
     }
 
