@@ -1,25 +1,24 @@
 package com.antarikshc.theguardiannews.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.loader.app.LoaderManager
 import com.antarikshc.theguardiannews.R
 import com.antarikshc.theguardiannews.datasource.NewsLoader
 import com.antarikshc.theguardiannews.model.NewsData
 import com.antarikshc.theguardiannews.util.Master
-import kotlinx.android.synthetic.main.activity_main.*
+import com.antarikshc.theguardiannews.util.openBrowser
 import kotlinx.android.synthetic.main.activity_search.*
 
-class SearchActivity : AppCompatActivity(), androidx.loader.app.LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
+class SearchActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<ArrayList<NewsData>> {
 
     // Global params
     private var searchNewsUrl: String? = null
 
     private var scrollState = 0
-    private var loaderManager: androidx.loader.app.LoaderManager? = null
+    private var loaderManager: LoaderManager? = null
 
     private lateinit var searchNewsAdapter: CustomAdapter
 
@@ -29,18 +28,15 @@ class SearchActivity : AppCompatActivity(), androidx.loader.app.LoaderManager.Lo
 
         val searchIntent = intent
 
-        //set the title as the search query on toolbar
-        var title = searchIntent.getStringExtra("title")
-        title = "${title.substring(0, 1).toUpperCase()} ${title.substring(1)}"
-        toolbar.title = title
-
         //set it as action bar to retrieve it back
-        setSupportActionBar(toolbar)
+        setSupportActionBar(search_activity_toolbar)
 
         //Add back button in Toolbar
         supportActionBar?.run {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            // set the title as the search query on toolbar
+            title = searchIntent.getStringExtra("title").capitalize()
         }
 
         searchNewsUrl = searchIntent.getStringExtra("url")
@@ -65,23 +61,7 @@ class SearchActivity : AppCompatActivity(), androidx.loader.app.LoaderManager.Lo
         }
 
         search_news_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val currentData = searchNewsAdapter.getItem(position)
-
-            if (currentData != null) {
-                try {
-                    //Explicit Intent
-                    val webActivityIntent = Intent(applicationContext, WebviewActivity::class.java)
-                    webActivityIntent.putExtra("url", currentData.webUrl)
-                    startActivity(webActivityIntent)
-                } catch (e: Exception) {
-                    //Implicit Intent
-                    val webUri = Uri.parse(currentData.webUrl)
-                    val webBrowserIntent = Intent(Intent.ACTION_VIEW, webUri)
-                    if (webBrowserIntent.resolveActivity(packageManager) != null) {
-                        startActivity(webBrowserIntent)
-                    }
-                }
-            }
+            openBrowser(searchNewsAdapter.getItem(position))
         }
 
         search_refresh.setOnRefreshListener {
