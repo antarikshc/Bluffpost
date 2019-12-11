@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -14,6 +18,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    dataBinding {
+        enabled = true
     }
     buildTypes {
         release {
@@ -27,7 +34,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Kotlin Standard lib
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // AppCompat
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -36,7 +43,12 @@ dependencies {
     // Constraint Layout
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
+    // Jetpack Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
     // Test
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
