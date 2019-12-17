@@ -1,4 +1,4 @@
-package com.antarikshc.bluffpost
+package com.antarikshc.bluffpost.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.antarikshc.bluffpost.R
 
 /**
  * A simple [Fragment] subclass with [OnBackPressedDispatcher]
