@@ -12,6 +12,7 @@ import coil.request.CachePolicy
 import coil.transform.RoundedCornersTransformation
 import com.antarikshc.bluffpost.R
 import com.antarikshc.bluffpost.models.News
+import com.antarikshc.bluffpost.utils.getRelativeTime
 import kotlinx.android.synthetic.main.layout_news_item.view.*
 
 class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
@@ -46,6 +47,14 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
             }
 
             text_news_title.text = item.content.headline
+
+            if (item.getAuthor() != null) {
+                val byline = "${item.getAuthor()} • ${item.publicationDate.getRelativeTime()}"
+                text_news_byline.text = byline
+            } else {
+                text_news_byline.text = item.publicationDate.getRelativeTime()
+            }
+
         }
     }
 

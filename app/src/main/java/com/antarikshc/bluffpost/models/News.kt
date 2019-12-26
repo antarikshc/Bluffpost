@@ -24,6 +24,9 @@ data class News(
     val authors: List<Author>
 
 ) {
+
+    fun getAuthor(): String? = if (!authors.isNullOrEmpty()) authors[0].title else null
+
     override fun equals(other: Any?): Boolean {
         if (javaClass != other?.javaClass) return false
         other as News
