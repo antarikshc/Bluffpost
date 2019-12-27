@@ -41,7 +41,6 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
 
             img_news_thumbnail.load(item.content.thumbnailUrl) {
                 diskCachePolicy(CachePolicy.ENABLED)
-                crossfade(true)
                 placeholder(R.mipmap.media_place_holder)
                 transformations(RoundedCornersTransformation(16F))
             }
