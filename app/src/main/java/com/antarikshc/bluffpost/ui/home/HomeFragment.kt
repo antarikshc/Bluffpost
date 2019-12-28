@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.antarikshc.bluffpost.R
 import com.antarikshc.bluffpost.databinding.FragmentHomeBinding
+import com.bumptech.glide.Glide
 
 /**
  * A simple [Fragment] subclass with [OnBackPressedDispatcher]
@@ -36,6 +37,7 @@ class HomeFragment : Fragment() {
 
     private val navController by lazy { findNavController() }
     private val viewModel by lazy { provideHomeViewModel() }
+    private val glide by lazy { Glide.with(this) }
     private lateinit var binding: FragmentHomeBinding
     private var adapter: NewsAdapter? = null
 
@@ -62,7 +64,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupNewsRV(): NewsAdapter {
-        val adapter = NewsAdapter()
+        val adapter = NewsAdapter(glide)
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 

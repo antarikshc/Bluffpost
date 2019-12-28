@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.api.load
-import coil.request.CachePolicy
-import coil.transform.RoundedCornersTransformation
 import com.antarikshc.bluffpost.R
 import com.antarikshc.bluffpost.models.News
 import com.antarikshc.bluffpost.utils.getRelativeTime
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.layout_news_item.view.*
 
-class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
+class NewsAdapter(private val glide: RequestManager) :
+    ListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.layout_news_item, parent, false)
@@ -39,11 +41,12 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
 
         fun bind(item: News) = with(itemView) {
 
-            img_news_thumbnail.load(item.content.thumbnailUrl) {
-                diskCachePolicy(CachePolicy.ENABLED)
-                placeholder(R.mipmap.media_place_holder)
-                transformations(RoundedCornersTransformation(16F))
-            }
+            glide.load(item.content.thumbnailUrl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.color.lightGray)
+                .transform(RoundedCorners(18))
+                .transition(withCrossFade())
+                .into(img_news_thumbnail)
 
             text_news_title.text = item.content.headline
 
