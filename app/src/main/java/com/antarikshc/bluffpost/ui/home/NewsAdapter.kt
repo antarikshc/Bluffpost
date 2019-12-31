@@ -43,7 +43,7 @@ class NewsAdapter(private val glide: RequestManager) :
 
             glide.load(item.content.thumbnailUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.color.lightGray)
+                .placeholder(R.drawable.rounded_placeholder)
                 .transform(RoundedCorners(18))
                 .transition(withCrossFade())
                 .into(img_news_thumbnail)
