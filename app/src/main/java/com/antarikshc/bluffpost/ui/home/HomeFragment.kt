@@ -1,5 +1,6 @@
 package com.antarikshc.bluffpost.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +45,13 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(this) { onBackPressed() }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Obtaining the Home graph from Activity and instantiate
+        // the @Inject fields with objects from the graph
+        (activity as HomeActivity).homeComponent.inject(this)
     }
 
     override fun onCreateView(
