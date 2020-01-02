@@ -10,12 +10,14 @@ import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.antarikshc.bluffpost.R
 import com.antarikshc.bluffpost.databinding.FragmentHomeBinding
 import com.bumptech.glide.Glide
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass with [OnBackPressedDispatcher]
@@ -36,6 +38,7 @@ class HomeFragment : Fragment() {
         private val TAG = HomeFragment::class.java.simpleName
     }
 
+    @Inject lateinit var factory: ViewModelProvider.Factory
     private val navController by lazy { findNavController() }
     private val viewModel by lazy { provideHomeViewModel() }
     private val glide by lazy { Glide.with(this) }
@@ -91,5 +94,5 @@ class HomeFragment : Fragment() {
     }
 
     private fun provideHomeViewModel() =
-        ViewModelProviders.of(requireActivity()).get(HomeVM::class.java)
+        ViewModelProviders.of(requireActivity(), factory).get(HomeVM::class.java)
 }

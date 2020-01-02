@@ -4,7 +4,9 @@ import com.antarikshc.bluffpost.ui.home.HomeActivity
 import com.antarikshc.bluffpost.ui.home.HomeFragment
 import dagger.Subcomponent
 
-@Subcomponent
+@Subcomponent(
+    modules = [HomeViewModelsModule::class]
+)
 interface HomeComponent {
 
     @Subcomponent.Factory

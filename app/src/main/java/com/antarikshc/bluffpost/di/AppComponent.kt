@@ -2,6 +2,7 @@ package com.antarikshc.bluffpost.di
 
 import android.app.Application
 import com.antarikshc.bluffpost.di.home.HomeComponent
+import com.app.wedupp.di.ViewModelBuilder
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -10,7 +11,8 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AppModule::class,
-        SubcomponentsModule::class
+        SubcomponentsModule::class,
+        ViewModelBuilder::class
     ]
 )
 interface AppComponent {
