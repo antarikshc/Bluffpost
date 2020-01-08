@@ -11,6 +11,7 @@ buildscript {
     ext.lifecycle_version = '2.2.0-rc03'
     ext.retrofit_version = '2.6.3'
     ext.glide_version = '4.10.0'
+    ext.room_version = '2.2.3'
 
     repositories {
         google()

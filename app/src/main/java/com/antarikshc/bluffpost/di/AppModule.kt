@@ -1,5 +1,7 @@
 package com.antarikshc.bluffpost.di
 
+import android.app.Application
+import com.antarikshc.bluffpost.data.local.AppDatabase
 import com.antarikshc.bluffpost.data.remote.NewsService
 import com.antarikshc.bluffpost.models.NewsResponse
 import com.antarikshc.bluffpost.utils.NewsResponseDeserializer
@@ -28,6 +30,11 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(NewsService::class.java)
+    }
+
+    @Provides
+    fun provideDatabase(application: Application): AppDatabase {
+        return AppDatabase.build(application)
     }
 
 }
