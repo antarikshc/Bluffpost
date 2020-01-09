@@ -41,20 +41,22 @@ class NewsAdapter(private val glide: RequestManager) :
 
         fun bind(item: News) = with(itemView) {
 
-            glide.load(item.content.thumbnailUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.drawable.rounded_placeholder)
-                .transform(RoundedCorners(18))
-                .transition(withCrossFade())
-                .into(img_news_thumbnail)
+            if (item.content != null) {
+                glide.load(item.content?.thumbnailUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.rounded_placeholder)
+                    .transform(RoundedCorners(18))
+                    .transition(withCrossFade())
+                    .into(img_news_thumbnail)
 
-            text_news_title.text = item.content.headline
+                text_news_title.text = item.content?.headline
 
-            if (item.getAuthor() != null) {
-                val byline = "${item.getAuthor()} • ${item.publicationDate.getRelativeTime()}"
-                text_news_byline.text = byline
-            } else {
-                text_news_byline.text = item.publicationDate.getRelativeTime()
+                if (item.getAuthor() != null) {
+                    val byline = "${item.getAuthor()} • ${item.publicationDate?.getRelativeTime()}"
+                    text_news_byline.text = byline
+                } else {
+                    text_news_byline.text = item.publicationDate?.getRelativeTime()
+                }
             }
 
         }

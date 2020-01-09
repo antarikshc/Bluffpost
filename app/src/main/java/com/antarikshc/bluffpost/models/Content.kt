@@ -1,5 +1,6 @@
 package com.antarikshc.bluffpost.models
 
+import androidx.room.ColumnInfo
 import com.google.gson.annotations.SerializedName
 
 data class Content(
@@ -8,6 +9,7 @@ data class Content(
 
     val byline: String,
 
+    @ColumnInfo(name = "thumbnail_url")
     @SerializedName("thumbnail")
     val thumbnailUrl: String
 

@@ -1,27 +1,35 @@
 package com.antarikshc.bluffpost.models
 
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
+@Entity(tableName = "news_table")
 data class News(
 
-    val id: String,
+    @PrimaryKey(autoGenerate = false)
+    var id: String = "",
 
     @SerializedName("webTitle")
-    val title: String,
+    var title: String = "",
 
-    val webUrl: String,
+    @ColumnInfo(name = "web_url")
+    var webUrl: String = "",
 
-    val apiUrl: String,
+    @ColumnInfo(name = "api_url")
+    var apiUrl: String = "",
 
+    @ColumnInfo(name = "publication_date")
     @SerializedName("webPublicationDate")
-    val publicationDate: Date,
+    var publicationDate: Date? = null,
 
+    @Embedded(prefix = "content_")
     @SerializedName("fields")
-    val content: Content,
+    var content: Content? = null,
 
+    @Ignore     // Field will be populated with Junction
     @SerializedName("tags")
-    val authors: List<Author>
+    var authors: List<Author> = listOf()
 
 ) {
 

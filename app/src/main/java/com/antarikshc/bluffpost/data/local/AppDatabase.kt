@@ -11,6 +11,8 @@ import com.antarikshc.bluffpost.models.News
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
+    abstract fun newsDao(): NewsDao
+
     companion object {
 
         @Volatile
