@@ -2,13 +2,13 @@ package com.antarikshc.bluffpost.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import com.antarikshc.bluffpost.data.remote.NewsService
+import androidx.lifecycle.asLiveData
+import com.antarikshc.bluffpost.data.repository.HomeRepository
 import com.antarikshc.bluffpost.models.NewsResponse
 import javax.inject.Inject
 
-class HomeVM @Inject constructor(private val service: NewsService) : ViewModel() {
+class HomeVM @Inject constructor(private val repository: HomeRepository) : ViewModel() {
 
-    val news: LiveData<NewsResponse> = liveData { emit(service.getNews()) }
+    val news: LiveData<NewsResponse> = repository.getNews().asLiveData()
 
 }
