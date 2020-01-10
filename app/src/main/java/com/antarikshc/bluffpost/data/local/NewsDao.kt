@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 interface NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(news: News)
+    fun insert(news: News)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(news: List<News>)
+    fun insert(news: List<News>)
 
-    @Update
-    suspend fun update(news: News)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(news: News)
 
     @Query("SELECT * from news_table WHERE id = :id")
     suspend fun get(id: String): News?
