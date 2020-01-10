@@ -68,9 +68,7 @@ class HomeFragment : Fragment() {
 
         adapter = setupNewsRV()
 
-        viewModel.news.observe(this, Observer {
-            adapter?.swapData(it.results)
-        })
+        viewModel.news.observe(viewLifecycleOwner, Observer { adapter?.swapData(it) })
     }
 
     private fun setupNewsRV(): NewsAdapter {
