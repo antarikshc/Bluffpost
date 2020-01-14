@@ -12,6 +12,7 @@ buildscript {
     ext.retrofit_version = '2.6.3'
     ext.glide_version = '4.10.0'
     ext.room_version = '2.2.3'
+    ext.paging_version = '2.1.1'
 
     repositories {
         google()

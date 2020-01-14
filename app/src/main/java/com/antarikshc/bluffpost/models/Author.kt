@@ -17,5 +17,5 @@ data class Author(
     @SerializedName("webTitle")
     val title: String,
 
-    val bio: String
+    val bio: String?
 )
