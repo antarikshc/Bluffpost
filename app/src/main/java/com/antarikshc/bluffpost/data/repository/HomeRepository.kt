@@ -21,7 +21,7 @@ class HomeRepository @Inject constructor(
             .map {
                 // Map NewsAuthorJunction back to News
                 // copy authors from junction and populate News.authors
-                it.map { junction -> junction.news.copy(authors = junction.authors) }
+                it.map { junction -> junction.news.copy().apply { authors = junction.authors } }
             }
             .flowOn(Dispatchers.IO)
             .distinctUntilChanged()
@@ -30,17 +30,21 @@ class HomeRepository @Inject constructor(
 
     suspend fun fetchNews() {
         withContext(Dispatchers.IO) {
-            // Fetch news
-            val news = service.getNews()
+            try {
+                // Fetch news
+                val news = service.getNews()
 
-            // Store results in DB
-            db.runInTransaction {
-                db.newsDao().insert(news.results)
-                val authors = arrayListOf<Author>()
-                news.results.forEach {
-                    authors.addAll(it.authors.map { author -> author.copy(newsId = it.id) })
+                // Store results in DB
+                db.runInTransaction {
+                    db.newsDao().insert(news.results)
+                    val authors = arrayListOf<Author>()
+                    news.results.forEach {
+                        authors.addAll(it.authors.map { author -> author.copy(newsId = it.id) })
+                    }
+                    db.authorDao().insert(authors)
                 }
-                db.authorDao().insert(authors)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

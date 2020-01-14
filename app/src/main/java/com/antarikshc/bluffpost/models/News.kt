@@ -8,30 +8,30 @@ import java.util.*
 data class News(
 
     @PrimaryKey(autoGenerate = false)
-    var id: String = "",
+    val id: String,
 
     @SerializedName("webTitle")
-    var title: String = "",
+    @ColumnInfo(name = "title")
+    val title: String,
 
     @ColumnInfo(name = "web_url")
-    var webUrl: String = "",
+    val webUrl: String,
 
     @ColumnInfo(name = "api_url")
-    var apiUrl: String = "",
+    val apiUrl: String,
 
     @ColumnInfo(name = "publication_date")
     @SerializedName("webPublicationDate")
-    var publicationDate: Date? = null,
+    val publicationDate: Date?,
 
     @Embedded(prefix = "content_")
     @SerializedName("fields")
-    var content: Content? = null,
+    val content: Content?
+) {
 
     @Ignore     // Field will be populated with Junction
     @SerializedName("tags")
     var authors: List<Author> = listOf()
-
-) {
 
     fun getAuthor(): String? = if (!authors.isNullOrEmpty()) authors[0].title else null
 
