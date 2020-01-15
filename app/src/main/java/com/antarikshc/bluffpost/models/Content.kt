@@ -7,7 +7,7 @@ data class Content(
 
     val headline: String,
 
-    val byline: String,
+    val byline: String?,
 
     @ColumnInfo(name = "thumbnail_url")
     @SerializedName("thumbnail")
