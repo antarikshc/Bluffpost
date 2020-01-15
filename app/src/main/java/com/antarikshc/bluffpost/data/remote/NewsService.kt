@@ -14,6 +14,7 @@ interface NewsService {
         @Query("show-editors-picks") editorPicks: Boolean = true,
         @Query("show-fields") fields: String = "thumbnail,headline,byline",
         @Query("show-tags") tags: String = "contributor",
+        @Query("page") page: Int = 1,
         @Query("api-key") key: String = BuildConfig.API_KEY
     ): NewsResponse
 
