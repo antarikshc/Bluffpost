@@ -1,5 +1,6 @@
 package com.antarikshc.bluffpost.data.local
 
+import androidx.paging.DataSource
 import androidx.room.*
 import com.antarikshc.bluffpost.models.News
 import com.antarikshc.bluffpost.models.NewsAuthorJunction
@@ -23,5 +24,12 @@ interface NewsDao {
     @Transaction
     @Query("SELECT * from news_table ORDER BY publication_date DESC")
     fun get(): Flow<List<NewsAuthorJunction>>
+
+    @Transaction
+    @Query("SELECT * from news_table ORDER BY publication_date DESC")
+    fun getPagedNews(): DataSource.Factory<Int, NewsAuthorJunction>
+
+    @Query("DELETE from news_table")
+    fun deleteAll()
 
 }

@@ -19,4 +19,7 @@ interface AuthorDao {
     @Query("SELECT * FROM authors_table")
     fun get(): Flow<Author>
 
+    @Query("DELETE from authors_table")
+    fun deleteAll()
+
 }
