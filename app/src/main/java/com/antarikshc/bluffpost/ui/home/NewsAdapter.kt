@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.antarikshc.bluffpost.R
 import com.antarikshc.bluffpost.models.News
@@ -17,7 +18,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import kotlinx.android.synthetic.main.layout_news_item.view.*
 
 class NewsAdapter(private val glide: RequestManager) :
-    ListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
+    PagedListAdapter<News, NewsAdapter.ViewHolder>(NewsDC()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.layout_news_item, parent, false)
@@ -27,7 +28,7 @@ class NewsAdapter(private val glide: RequestManager) :
         holder.bind(getItem(position))
     }
 
-    fun swapData(data: List<News>) = submitList(data.toMutableList())
+    fun swapData(data: PagedList<News>) = submitList(data)
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnClickListener {
 
@@ -39,17 +40,17 @@ class NewsAdapter(private val glide: RequestManager) :
             if (adapterPosition == RecyclerView.NO_POSITION) return
         }
 
-        fun bind(item: News) = with(itemView) {
+        fun bind(item: News?) = with(itemView) {
 
-            if (item.content != null) {
-                glide.load(item.content?.thumbnailUrl)
+            if (item?.content != null) {
+                glide.load(item.content.thumbnailUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.rounded_placeholder)
                     .transform(RoundedCorners(18))
                     .transition(withCrossFade())
                     .into(img_news_thumbnail)
 
-                text_news_title.text = item.content?.headline
+                text_news_title.text = item.content.headline
 
                 if (item.getAuthor() != null) {
                     val byline = "${item.getAuthor()} • ${item.publicationDate?.getRelativeTime()}"
