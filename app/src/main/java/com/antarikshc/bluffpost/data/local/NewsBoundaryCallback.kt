@@ -25,6 +25,10 @@ class NewsBoundaryCallback(
 
     init {
         // Load First page to get latest data
+        refreshItems()
+    }
+
+    fun refreshItems() {
         if (job == null || job?.isActive == false) {
             job = coroutineScope.launch(Dispatchers.IO) {
                 currentResponse = service.getNews(page = 1)

@@ -70,9 +70,12 @@ class HomeFragment : Fragment() {
 
         adapter = setupNewsRV()
 
+        setupSwipeRefresh()
+
         viewModel.news.observe(viewLifecycleOwner, Observer {
             adapter?.swapData(it)
             scrollToStart()
+            binding.swipeRefreshHome.isRefreshing = false
         })
     }
 
@@ -87,13 +90,17 @@ class HomeFragment : Fragment() {
         return adapter
     }
 
+    private fun setupSwipeRefresh() {
+        binding.swipeRefreshHome.setOnRefreshListener {
+            scrollToTop = true
+            viewModel.refresh()
+        }
+    }
+
     private fun scrollToStart() {
         if (!adapter?.currentList.isNullOrEmpty() && scrollToTop) {
-            binding.recyclerHomeNews.layoutManager?.smoothScrollToPosition(
-                binding.recyclerHomeNews,
-                RecyclerView.State(),
-                0
-            )
+            binding.recyclerHomeNews.layoutManager
+                ?.smoothScrollToPosition(binding.recyclerHomeNews, RecyclerView.State(), 0)
             scrollToTop = false
         }
     }

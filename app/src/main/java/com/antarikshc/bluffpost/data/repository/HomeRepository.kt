@@ -19,11 +19,17 @@ class HomeRepository @Inject constructor(
     private val db: AppDatabase
 ) {
 
+    private var boundaryCallback: NewsBoundaryCallback? = null
+
+    fun refreshNews() {
+        boundaryCallback?.refreshItems()
+    }
+
     /**
      * Create PagedList for News with NewsBoundaryCallback
      */
     fun getPagedNewsList(scope: CoroutineScope): Flow<PagedList<News>> {
-        val boundaryCallback = NewsBoundaryCallback(
+        boundaryCallback = NewsBoundaryCallback(
             coroutineScope = scope,
             service = service,
             response = this@HomeRepository::updateNewsDatabase

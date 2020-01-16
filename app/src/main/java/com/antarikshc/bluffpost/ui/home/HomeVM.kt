@@ -22,4 +22,6 @@ class HomeVM @Inject constructor(private val repository: HomeRepository) : ViewM
             .launchIn(viewModelScope)
     }
 
+    fun refresh() = repository.refreshNews()
+
 }
