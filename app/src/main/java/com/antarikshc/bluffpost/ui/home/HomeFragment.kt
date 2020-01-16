@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.antarikshc.bluffpost.R
 import com.antarikshc.bluffpost.databinding.FragmentHomeBinding
 import com.bumptech.glide.Glide
@@ -43,6 +44,7 @@ class HomeFragment : Fragment() {
     private val glide by lazy { Glide.with(this) }
     private lateinit var binding: FragmentHomeBinding
     private var adapter: NewsAdapter? = null
+    private var scrollToTop = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,10 @@ class HomeFragment : Fragment() {
 
         adapter = setupNewsRV()
 
-        viewModel.news.observe(viewLifecycleOwner, Observer { adapter?.swapData(it) })
+        viewModel.news.observe(viewLifecycleOwner, Observer {
+            adapter?.swapData(it)
+            scrollToStart()
+        })
     }
 
     private fun setupNewsRV(): NewsAdapter {
@@ -80,6 +85,17 @@ class HomeFragment : Fragment() {
         binding.recyclerHomeNews.adapter = adapter
 
         return adapter
+    }
+
+    private fun scrollToStart() {
+        if (!adapter?.currentList.isNullOrEmpty() && scrollToTop) {
+            binding.recyclerHomeNews.layoutManager?.smoothScrollToPosition(
+                binding.recyclerHomeNews,
+                RecyclerView.State(),
+                0
+            )
+            scrollToTop = false
+        }
     }
 
     /**
