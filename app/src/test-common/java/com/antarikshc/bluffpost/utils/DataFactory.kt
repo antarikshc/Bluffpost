@@ -1,10 +1,8 @@
-package com.antarikshc.bluffpost.utils.testing
+package com.antarikshc.bluffpost.utils
 
-import androidx.annotation.VisibleForTesting
 import java.util.*
 import kotlin.random.Random
 
-@VisibleForTesting(otherwise = VisibleForTesting.NONE)
 object DataFactory {
 
     fun randomUuid(): String = UUID.randomUUID().toString()

@@ -1,14 +1,10 @@
 package com.antarikshc.bluffpost.data.local
 
 import android.content.Context
-import androidx.room.Query
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.antarikshc.bluffpost.models.News
 import com.antarikshc.bluffpost.utils.NewsFactory
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals

@@ -2,8 +2,8 @@ package com.antarikshc.bluffpost.utils
 
 import com.antarikshc.bluffpost.models.Content
 import com.antarikshc.bluffpost.models.News
-import com.antarikshc.bluffpost.utils.testing.DataFactory.randomUuid
-import com.antarikshc.bluffpost.utils.testing.DataFactory.randomString
+import com.antarikshc.bluffpost.utils.DataFactory.randomUuid
+import com.antarikshc.bluffpost.utils.DataFactory.randomString
 import java.util.*
 
 object NewsFactory {
