@@ -17,7 +17,7 @@ interface AuthorDao {
     fun update(author: Author)
 
     @Query("SELECT * FROM authors_table")
-    fun get(): Flow<Author>
+    fun get(): Flow<List<Author>>
 
     @Query("DELETE from authors_table")
     fun deleteAll()
