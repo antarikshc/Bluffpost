@@ -21,6 +21,9 @@ interface NewsDao {
     @Query("SELECT * from news_table WHERE id = :id")
     suspend fun get(id: String): News?
 
+    @Query("SELECT * from news_table")
+    suspend fun getNews(): List<News>
+
     @Transaction
     @Query("SELECT * from news_table ORDER BY publication_date DESC")
     fun get(): Flow<List<NewsAuthorJunction>>
