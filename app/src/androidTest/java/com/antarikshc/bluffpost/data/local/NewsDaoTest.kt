@@ -40,7 +40,7 @@ open class NewsDaoTest {
         newsDao.insert(news)
 
         val newsFromDb = newsDao.get(news.id)
-        assertEquals(newsFromDb?.id, news.id)
+        assertEquals(news.id, newsFromDb?.id)
     }
 
     @Test
@@ -50,7 +50,7 @@ open class NewsDaoTest {
         newsDao.insert(news)
 
         val newsFromDb = newsDao.getNews()
-        assertEquals(newsFromDb.containsAll(news), true)
+        assertEquals(true, newsFromDb.containsAll(news))
     }
 
     @Test
@@ -61,6 +61,6 @@ open class NewsDaoTest {
         newsDao.deleteAll()
 
         val newsFromDb = newsDao.getNews()
-        assertEquals(newsFromDb.isEmpty(), true)
+        assertEquals(true, newsFromDb.isEmpty())
     }
 }
