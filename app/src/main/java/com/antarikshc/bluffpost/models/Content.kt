@@ -11,7 +11,7 @@ data class Content(
 
     @ColumnInfo(name = "thumbnail_url")
     @SerializedName("thumbnail")
-    val thumbnailUrl: String
+    val thumbnailUrl: String?
 
 ) {
     override fun equals(other: Any?): Boolean {
