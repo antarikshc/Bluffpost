@@ -1,6 +1,6 @@
 package com.antarikshc.bluffpost.data.repository
 
-import androidx.lifecycle.asFlow
+import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.antarikshc.bluffpost.data.local.AppDatabase
@@ -10,7 +10,6 @@ import com.antarikshc.bluffpost.models.Author
 import com.antarikshc.bluffpost.models.News
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -26,9 +25,9 @@ class HomeRepository @Inject constructor(
     }
 
     /**
-     * Create PagedList for News with NewsBoundaryCallback
+     * Create PagedList for [News] with [NewsBoundaryCallback], return LiveData of [News]
      */
-    fun getPagedNewsList(scope: CoroutineScope): Flow<PagedList<News>> {
+    fun getPagedNewsList(scope: CoroutineScope): LiveData<PagedList<News>> {
         boundaryCallback = NewsBoundaryCallback(
             coroutineScope = scope,
             service = service,
@@ -40,11 +39,9 @@ class HomeRepository @Inject constructor(
             .setEnablePlaceholders(true)
             .build()
 
-        val newsPagedList = db.newsDao().getPagedNews()
+        return db.newsDao().getPagedNews()
             .map { it.news.copy().apply { authors = it.authors } } // Map to News from Junction
-            .toLiveData(config = pagedConfig, boundaryCallback = boundaryCallback)
-
-        return newsPagedList.asFlow()
+            .toLiveData<Int?, News>(config = pagedConfig, boundaryCallback = boundaryCallback)
     }
 
     /**
@@ -59,7 +56,7 @@ class HomeRepository @Inject constructor(
                 db.authorDao().deleteAll()
             }
             db.newsDao().insert(news)
-            val authors = arrayListOf<Author>()
+            val authors = mutableListOf<Author>()
             news.forEach {
                 authors.addAll(it.authors.map { author -> author.copy(newsId = it.id) })
             }
