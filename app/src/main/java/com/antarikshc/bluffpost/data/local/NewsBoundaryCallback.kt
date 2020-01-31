@@ -29,11 +29,11 @@ class NewsBoundaryCallback(
     }
 
     fun refreshItems() {
-        if (job == null || job?.isActive == false) {
-            job = coroutineScope.launch(Dispatchers.IO) {
-                currentResponse = service.getNews(page = 1)
-                response(currentResponse.currentPage, currentResponse.results)
-            }
+        Log.d(TAG, "onRefreshItems")
+        if (job != null && job?.isActive != false) job?.cancel()
+        job = coroutineScope.launch(Dispatchers.IO) {
+            currentResponse = service.getNews(page = 1)
+            response(currentResponse.currentPage, currentResponse.results)
         }
     }
 
