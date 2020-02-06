@@ -49,7 +49,7 @@ class HomeRepository @Inject constructor(
      * if PAGE = 1 then clear data and add news
      * if PAGE > 1 then append news
      */
-    private fun updateNewsDatabase(page: Int, news: List<News>) {
+    fun updateNewsDatabase(page: Int, news: List<News>) {
         db.runInTransaction {
             if (page == 1) {
                 db.newsDao().deleteAll()
