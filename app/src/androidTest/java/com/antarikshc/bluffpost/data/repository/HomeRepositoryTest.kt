@@ -4,12 +4,8 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.antarikshc.bluffpost.data.local.AppDatabase
 import com.antarikshc.bluffpost.data.remote.FakeNewsService
 import com.antarikshc.bluffpost.utils.NewsFactory
-import com.antarikshc.bluffpost.utils.getOrAwaitValue
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -23,7 +19,7 @@ class HomeRepositoryTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var repository: HomeRepository
+    private lateinit var repository: com.antarikshc.news.data.repository.HomeRepository
     private lateinit var db: AppDatabase
     private var service = FakeNewsService()
 
@@ -31,7 +27,8 @@ class HomeRepositoryTest {
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-        repository = HomeRepository(service, db)
+        repository =
+            com.antarikshc.news.data.repository.HomeRepository(service, db)
     }
 
     @After

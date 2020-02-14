@@ -17,7 +17,7 @@ import java.io.IOException
 open class NewsDaoTest {
 
     private lateinit var db: AppDatabase
-    private lateinit var newsDao: NewsDao
+    private lateinit var newsDao: com.antarikshc.news.data.local.NewsDao
 
     @Before
     fun setUp() {

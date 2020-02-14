@@ -1,4 +1,4 @@
-package com.antarikshc.bluffpost.models
+package com.antarikshc.news.models
 
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
@@ -26,12 +26,12 @@ data class News(
 
     @Embedded(prefix = "content_")
     @SerializedName("fields")
-    val content: Content?
+    val content: com.antarikshc.news.models.Content?
 ) {
 
     @Ignore     // Field will be populated with Junction
     @SerializedName("tags")
-    var authors: List<Author> = listOf()
+    var authors: List<com.antarikshc.news.models.Author> = listOf()
 
     fun getAuthor(): String? = if (!authors.isNullOrEmpty()) authors[0].title else null
 

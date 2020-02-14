@@ -1,30 +1,31 @@
-package com.antarikshc.bluffpost.ui.home
+package com.antarikshc.news.ui
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.antarikshc.bluffpost.R
-import com.antarikshc.bluffpost.databinding.FragmentHomeBinding
+import com.antarikshc.bluffpost.ui.BaseApplication
+import com.antarikshc.news.R
+import com.antarikshc.news.databinding.FragmentHomeBinding
+import com.antarikshc.news.di.DaggerNewsComponent
+import com.antarikshc.news.di.NewsComponent
 import com.bumptech.glide.Glide
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass with [OnBackPressedDispatcher]
- * Use the [HomeFragment.newInstance] factory method to
+ * Use the [NewsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment() {
+class NewsFragment : Fragment() {
 
     companion object {
         /**
@@ -33,14 +34,14 @@ class HomeFragment : Fragment() {
          * @return A new instance of fragment HomeFragment.
          */
         @JvmStatic
-        fun newInstance() = HomeFragment()
+        fun newInstance() = NewsFragment()
 
-        private val TAG = HomeFragment::class.java.simpleName
+        private val TAG = NewsFragment::class.java.simpleName
     }
 
-    @Inject lateinit var factory: ViewModelProvider.Factory
+    lateinit var newsComponent: NewsComponent
+    @Inject lateinit var viewModel: NewsVM
     private val navController by lazy { findNavController() }
-    private val viewModel by lazy { provideHomeViewModel() }
     private val glide by lazy { Glide.with(this) }
     private lateinit var binding: FragmentHomeBinding
     private var adapter: NewsAdapter? = null
@@ -55,7 +56,10 @@ class HomeFragment : Fragment() {
         super.onAttach(context)
         // Obtaining the Home graph from Activity and instantiate
         // the @Inject fields with objects from the graph
-        (activity as HomeActivity).homeComponent.inject(this)
+
+        val appComponent = (context as BaseApplication).appComponent
+        newsComponent = DaggerNewsComponent.factory().create(appComponent)
+        newsComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -113,6 +117,4 @@ class HomeFragment : Fragment() {
         requireActivity().finish()
     }
 
-    private fun provideHomeViewModel() =
-        ViewModelProvider(requireActivity(), factory).get(HomeVM::class.java)
 }

@@ -1,4 +1,4 @@
-package com.antarikshc.bluffpost.data.local
+package com.antarikshc.news.data.local
 
 import androidx.room.TypeConverter
 import java.util.*

@@ -1,7 +1,7 @@
-package com.antarikshc.bluffpost.data.remote
+package com.antarikshc.news.data.remote
 
 import com.antarikshc.bluffpost.BuildConfig
-import com.antarikshc.bluffpost.models.NewsResponse
+import com.antarikshc.news.models.NewsResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

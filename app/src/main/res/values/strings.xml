@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Bluffpost</string>
+    <string name="title_news">News</string>
 </resources>

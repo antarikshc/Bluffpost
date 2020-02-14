@@ -1,10 +1,10 @@
-package com.antarikshc.bluffpost.di
+package com.antarikshc.news.di
 
 import android.app.Application
-import com.antarikshc.bluffpost.data.local.AppDatabase
-import com.antarikshc.bluffpost.data.remote.NewsService
-import com.antarikshc.bluffpost.models.NewsResponse
-import com.antarikshc.bluffpost.utils.NewsResponseDeserializer
+import com.antarikshc.news.data.local.NewsDatabase
+import com.antarikshc.news.data.remote.NewsService
+import com.antarikshc.news.models.NewsResponse
+import com.antarikshc.news.utils.NewsResponseDeserializer
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-object AppModule {
+object NewsModule {
 
     @Provides
     fun provideGson(): Gson {
@@ -33,8 +33,9 @@ object AppModule {
     }
 
     @Provides
-    fun provideDatabase(application: Application): AppDatabase {
-        return AppDatabase.build(application)
+    fun provideDatabase(application: Application): NewsDatabase {
+        return NewsDatabase.build(application)
     }
+
 
 }

@@ -1,7 +1,7 @@
-package com.antarikshc.bluffpost.data.local
+package com.antarikshc.news.data.local
 
 import androidx.room.*
-import com.antarikshc.bluffpost.models.Author
+import com.antarikshc.news.models.Author
 import kotlinx.coroutines.flow.Flow
 
 @Dao

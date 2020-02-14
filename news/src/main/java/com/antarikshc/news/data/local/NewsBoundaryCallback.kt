@@ -1,10 +1,9 @@
-package com.antarikshc.bluffpost.data.local
+package com.antarikshc.news.data.local
 
 import android.util.Log
 import androidx.paging.PagedList
-import com.antarikshc.bluffpost.data.remote.NewsService
-import com.antarikshc.bluffpost.models.News
-import com.antarikshc.bluffpost.models.NewsResponse
+import com.antarikshc.news.data.remote.NewsService
+import com.antarikshc.news.models.News
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,7 +19,8 @@ class NewsBoundaryCallback(
         private val TAG = NewsBoundaryCallback::class.java.simpleName
     }
 
-    private var currentResponse = NewsResponse(0, 0, listOf())
+    private var currentResponse =
+        com.antarikshc.news.models.NewsResponse(0, 0, listOf())
     private var job: Job? = null
 
     init {

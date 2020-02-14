@@ -1,21 +1,23 @@
-package com.antarikshc.bluffpost.data.repository
+package com.antarikshc.news.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
-import com.antarikshc.bluffpost.data.local.AppDatabase
-import com.antarikshc.bluffpost.data.local.NewsBoundaryCallback
-import com.antarikshc.bluffpost.data.remote.NewsService
-import com.antarikshc.bluffpost.models.Author
-import com.antarikshc.bluffpost.models.News
+import com.antarikshc.news.data.local.NewsBoundaryCallback
+import com.antarikshc.news.data.local.NewsDatabase
+import com.antarikshc.news.data.remote.NewsService
+import com.antarikshc.news.di.NewsScope
+import com.antarikshc.news.models.Author
+import com.antarikshc.news.models.News
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@NewsScope
 @ExperimentalCoroutinesApi
 class HomeRepository @Inject constructor(
     private val service: NewsService,
-    private val db: AppDatabase
+    private val db: NewsDatabase
 ) {
 
     private var boundaryCallback: NewsBoundaryCallback? = null

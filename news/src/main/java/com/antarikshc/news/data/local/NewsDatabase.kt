@@ -1,16 +1,16 @@
-package com.antarikshc.bluffpost.data.local
+package com.antarikshc.news.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.antarikshc.bluffpost.models.Author
-import com.antarikshc.bluffpost.models.News
+import com.antarikshc.news.models.Author
+import com.antarikshc.news.models.News
 
 @Database(entities = [News::class, Author::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class AppDatabase : RoomDatabase() {
+abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
     abstract fun authorDao(): AuthorDao
@@ -18,9 +18,9 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
 
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE: NewsDatabase? = null
 
-        fun build(context: Context): AppDatabase {
+        fun build(context: Context): NewsDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
@@ -29,8 +29,8 @@ abstract class AppDatabase : RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java,
-                    "bluffpost_database"
+                    NewsDatabase::class.java,
+                    "bluffpost_news_db"
                 )
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     .fallbackToDestructiveMigration()

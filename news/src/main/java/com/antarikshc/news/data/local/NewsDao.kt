@@ -1,9 +1,9 @@
-package com.antarikshc.bluffpost.data.local
+package com.antarikshc.news.data.local
 
 import androidx.paging.DataSource
 import androidx.room.*
-import com.antarikshc.bluffpost.models.News
-import com.antarikshc.bluffpost.models.NewsAuthorJunction
+import com.antarikshc.news.models.News
+import com.antarikshc.news.models.NewsAuthorJunction
 import kotlinx.coroutines.flow.Flow
 
 @Dao

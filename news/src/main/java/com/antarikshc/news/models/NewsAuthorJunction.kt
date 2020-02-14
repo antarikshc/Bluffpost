@@ -1,4 +1,4 @@
-package com.antarikshc.bluffpost.models
+package com.antarikshc.news.models
 
 import androidx.room.Embedded
 import androidx.room.Relation
