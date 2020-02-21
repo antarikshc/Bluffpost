@@ -2,11 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/newsFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.antarikshc.bluffpost.ui.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:id="@+id/newsFragment"
+        android:name="com.antarikshc.news.ui.NewsFragment"
+        android:label="NewsFragment" />
 
 </navigation>

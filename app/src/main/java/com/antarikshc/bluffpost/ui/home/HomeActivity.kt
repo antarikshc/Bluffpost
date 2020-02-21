@@ -10,13 +10,7 @@ import com.antarikshc.bluffpost.R
 
 class HomeActivity : AppCompatActivity() {
 
-//    lateinit var homeComponent: HomeComponent
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Creating of the Home graph using the application graph
-//        homeComponent = (application as BaseApplication).appComponent.homeComponent().create()
-//            .apply { inject(this@HomeActivity) } // Make Dagger instantiate @Inject fields in Activity
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
@@ -25,5 +19,17 @@ class HomeActivity : AppCompatActivity() {
             window.statusBarColor = Color.WHITE
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
+
+//        val newsFragment = Class.forName("com.antarikshc.news.ui.NewsFragment")
+//            .getConstructor()
+//            .newInstance() as Fragment
+//        val backstackName = newsFragment::class.java.simpleName
+//
+//        supportFragmentManager.beginTransaction().apply {
+//            setReorderingAllowed(true)
+//            replace(R.id.fragment_main_container, newsFragment, backstackName)
+//            addToBackStack(backstackName)
+//            commit()
+//        }
     }
 }

@@ -11,7 +11,7 @@ interface NewsComponent {
     @Component.Factory
     interface Factory {
         // Takes an instance of AppComponent when creating an instance
-        fun create(appComponent: AppComponent): NewsComponent
+        fun create(appComponent: AppComponent, module: NewsModule): NewsComponent
     }
 
     fun inject(newsFragment: NewsFragment)

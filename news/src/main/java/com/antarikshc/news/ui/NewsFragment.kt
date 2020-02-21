@@ -9,7 +9,6 @@ import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.antarikshc.bluffpost.ui.BaseApplication
@@ -17,6 +16,7 @@ import com.antarikshc.news.R
 import com.antarikshc.news.databinding.FragmentHomeBinding
 import com.antarikshc.news.di.DaggerNewsComponent
 import com.antarikshc.news.di.NewsComponent
+import com.antarikshc.news.di.NewsModule
 import com.bumptech.glide.Glide
 import javax.inject.Inject
 
@@ -41,7 +41,6 @@ class NewsFragment : Fragment() {
 
     lateinit var newsComponent: NewsComponent
     @Inject lateinit var viewModel: NewsVM
-    private val navController by lazy { findNavController() }
     private val glide by lazy { Glide.with(this) }
     private lateinit var binding: FragmentHomeBinding
     private var adapter: NewsAdapter? = null
@@ -57,8 +56,8 @@ class NewsFragment : Fragment() {
         // Obtaining the Home graph from Activity and instantiate
         // the @Inject fields with objects from the graph
 
-        val appComponent = (context as BaseApplication).appComponent
-        newsComponent = DaggerNewsComponent.factory().create(appComponent)
+        val appComponent = (context.applicationContext as BaseApplication).appComponent
+        newsComponent = DaggerNewsComponent.factory().create(appComponent, NewsModule(context))
         newsComponent.inject(this)
     }
 

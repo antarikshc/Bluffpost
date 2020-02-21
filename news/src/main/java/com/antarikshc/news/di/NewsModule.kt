@@ -1,6 +1,6 @@
 package com.antarikshc.news.di
 
-import android.app.Application
+import android.content.Context
 import com.antarikshc.news.data.local.NewsDatabase
 import com.antarikshc.news.data.remote.NewsService
 import com.antarikshc.news.models.NewsResponse
@@ -13,7 +13,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-object NewsModule {
+class NewsModule(val context: Context) {
+
+    @Provides
+    fun provideContext(): Context = context
 
     @Provides
     fun provideGson(): Gson {
@@ -33,8 +36,8 @@ object NewsModule {
     }
 
     @Provides
-    fun provideDatabase(application: Application): NewsDatabase {
-        return NewsDatabase.build(application)
+    fun provideDatabase(context: Context): NewsDatabase {
+        return NewsDatabase.build(context.applicationContext)
     }
 
 
