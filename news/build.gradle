@@ -7,14 +7,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 apply plugin: 'androidx.navigation.safeargs.kotlin'
-//apply from: '../shared.dependencies.gradle'
 
 android {
-    compileSdkVersion compileSdk
+    compileSdkVersion Versions.compileSdk
 
     defaultConfig {
-        minSdkVersion minSdk
-        targetSdkVersion targetSdk
+        minSdkVersion Versions.minSdk
+        targetSdkVersion Versions.targetSdk
     }
 
     compileOptions {
@@ -37,56 +36,55 @@ dependencies {
     implementation project(':app')
 
     // Kotlin Standard lib
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation Deps.kotlinStdLib
 
     // AppCompat
-    implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.core:core-ktx:$androidx_core_version"
-    implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_version"
+    implementation Deps.appCompat
+    implementation Deps.androidxCore
 
     // Constraint Layout
-    implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
-
-    // RecyclerView
-    implementation "androidx.recyclerview:recyclerview:$recycler_version"
+    implementation Deps.constraintLayout
 
     // Fragments
-    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    implementation Deps.fragment
+
+    // RecyclerView
+    implementation Deps.recyclerView
 
     // Jetpack Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    implementation Deps.navigation
+    implementation Deps.navigationUi
+    implementation Deps.navigationDynamicFeatures
 
     // Jetpack Paging
-    implementation "androidx.paging:paging-runtime:$paging_version"
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    implementation Deps.paging
+    implementation Deps.pagingKtx
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+    implementation Deps.coroutines
+    implementation Deps.coroutinesAndroid
+    testImplementation Deps.coroutinesTest
 
     // Dagger2
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation Deps.dagger
+    kapt Deps.daggerKapt
 
     // LiveData and ViewModel
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    implementation Deps.lifecycleExt
+    implementation Deps.lifecycleRuntime
+    implementation Deps.lifecycleViewModel
+    implementation Deps.lifecycleLiveData
+    kapt Deps.lifecycleKapt
 
     // Room
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    implementation Deps.room
+    implementation Deps.roomKtx
+    kapt Deps.roomKapt
 
     // Retrofit + GSON
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation Deps.retrofit
+    implementation Deps.retrofitGson
 
     // Glide
-    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation Deps.glide
 }
