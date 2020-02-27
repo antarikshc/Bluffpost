@@ -84,12 +84,4 @@ dependencies {
     implementation Deps.lifecycleViewModel
     implementation Deps.lifecycleLiveData
     kapt Deps.lifecycleKapt
-
-    // Test
-    testImplementation Deps.junit
-    androidTestImplementation Deps.androidxTestRunner
-    androidTestImplementation Deps.androidxTestRules
-    androidTestImplementation Deps.androidxCoreTest
-    androidTestImplementation Deps.androidxJunitExt
-    androidTestImplementation Deps.espressoCore
 }

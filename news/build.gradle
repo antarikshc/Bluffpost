@@ -29,6 +29,10 @@ android {
         enabled = true
     }
 
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
 }
 
 dependencies {
@@ -87,4 +91,12 @@ dependencies {
 
     // Glide
     implementation Deps.glide
+
+    // Test
+    testImplementation Deps.junit
+    androidTestImplementation Deps.androidxTestRunner
+    androidTestImplementation Deps.androidxTestRules
+    androidTestImplementation Deps.androidxCoreTest
+    androidTestImplementation Deps.androidxJunitExt
+    androidTestImplementation Deps.espressoCore
 }

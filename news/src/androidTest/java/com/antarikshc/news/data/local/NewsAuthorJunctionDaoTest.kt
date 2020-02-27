@@ -1,11 +1,13 @@
-package com.antarikshc.bluffpost.data.local
+package com.antarikshc.news.data.local
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.antarikshc.bluffpost.utils.NewsFactory
 import com.antarikshc.news.models.Author
+import com.antarikshc.news.utils.NewsFactory
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -17,14 +19,14 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 open class NewsAuthorJunctionDaoTest {
 
-    private lateinit var db: AppDatabase
-    private lateinit var newsDao: com.antarikshc.news.data.local.NewsDao
-    private lateinit var authorDao: com.antarikshc.news.data.local.AuthorDao
+    private lateinit var db: NewsDatabase
+    private lateinit var newsDao: NewsDao
+    private lateinit var authorDao: AuthorDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        db = Room.inMemoryDatabaseBuilder(context, NewsDatabase::class.java).build()
         newsDao = db.newsDao()
         authorDao = db.authorDao()
     }
@@ -41,7 +43,7 @@ open class NewsAuthorJunctionDaoTest {
         val junction = NewsFactory.randomNewsAuthorJunction()
 
         newsDao.insert(junction.map { it.news })
-        val authors = mutableListOf<com.antarikshc.news.models.Author>()
+        val authors = mutableListOf<Author>()
         junction.forEach { authors.addAll(it.authors) }
         authorDao.insert(authors)
 
@@ -57,7 +59,7 @@ open class NewsAuthorJunctionDaoTest {
         val junction = NewsFactory.randomNewsAuthorJunction()
 
         newsDao.insert(junction.map { it.news })
-        val authors = mutableListOf<com.antarikshc.news.models.Author>()
+        val authors = mutableListOf<Author>()
         junction.forEach { authors.addAll(it.authors) }
         authorDao.insert(authors)
         val junctionFromDb = newsDao.get().take(1).toList()

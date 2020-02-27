@@ -1,9 +1,9 @@
-package com.antarikshc.bluffpost.data.remote
+package com.antarikshc.news.data.remote
 
-import com.antarikshc.bluffpost.utils.NewsFactory
 import com.antarikshc.news.models.NewsResponse
+import com.antarikshc.news.utils.NewsFactory
 
-class FakeNewsService : com.antarikshc.news.data.remote.NewsService {
+class FakeNewsService : NewsService {
 
     companion object {
         private const val COUNT = 10
@@ -17,9 +17,9 @@ class FakeNewsService : com.antarikshc.news.data.remote.NewsService {
         tags: String,
         page: Int,
         key: String
-    ): com.antarikshc.news.models.NewsResponse {
+    ): NewsResponse {
         val news = NewsFactory.randomNewsList(COUNT)
-        return com.antarikshc.news.models.NewsResponse(
+        return NewsResponse(
             currentPage = page,
             totalPages = 100,
             results = news

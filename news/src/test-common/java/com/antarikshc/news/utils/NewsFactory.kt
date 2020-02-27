@@ -1,16 +1,15 @@
-package com.antarikshc.bluffpost.utils
+package com.antarikshc.news.utils
 
-import com.antarikshc.bluffpost.utils.DataFactory.randomLong
-import com.antarikshc.bluffpost.utils.DataFactory.randomString
-import com.antarikshc.bluffpost.utils.DataFactory.randomUuid
-import com.antarikshc.news.models.Content
 import com.antarikshc.news.models.News
 import com.antarikshc.news.models.NewsAuthorJunction
+import com.antarikshc.news.utils.DataFactory.randomLong
+import com.antarikshc.news.utils.DataFactory.randomString
+import com.antarikshc.news.utils.DataFactory.randomUuid
 import java.util.*
 
 object NewsFactory {
 
-    fun randomNews() = com.antarikshc.news.models.News(
+    fun randomNews() = News(
         id = randomUuid(),
         title = randomString(),
         apiUrl = randomString(),
@@ -23,20 +22,20 @@ object NewsFactory {
         )
     )
 
-    fun randomNewsList(count: Int = 5): List<com.antarikshc.news.models.News> {
-        val list = mutableListOf<com.antarikshc.news.models.News>()
+    fun randomNewsList(count: Int = 5): List<News> {
+        val list = mutableListOf<News>()
         repeat(count) {
             list.add(randomNews())
         }
         return list
     }
 
-    fun randomNewsAuthorJunction(count: Int = 5): List<com.antarikshc.news.models.NewsAuthorJunction> {
-        val list = mutableListOf<com.antarikshc.news.models.NewsAuthorJunction>()
+    fun randomNewsAuthorJunction(count: Int = 5): List<NewsAuthorJunction> {
+        val list = mutableListOf<NewsAuthorJunction>()
         repeat(count) {
             val news = randomNews()
             val author = AuthorFactory.randomAuthor(news.id)
-            list += com.antarikshc.news.models.NewsAuthorJunction(
+            list += NewsAuthorJunction(
                 news,
                 listOf(author)
             )

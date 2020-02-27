@@ -1,10 +1,10 @@
-package com.antarikshc.bluffpost.data.local
+package com.antarikshc.news.data.local
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.antarikshc.bluffpost.utils.NewsFactory
+import com.antarikshc.news.utils.NewsFactory
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -16,13 +16,13 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 open class NewsDaoTest {
 
-    private lateinit var db: AppDatabase
-    private lateinit var newsDao: com.antarikshc.news.data.local.NewsDao
+    private lateinit var db: NewsDatabase
+    private lateinit var newsDao: NewsDao
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        db = Room.inMemoryDatabaseBuilder(context, NewsDatabase::class.java).build()
         newsDao = db.newsDao()
     }
 

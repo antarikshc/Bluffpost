@@ -1,13 +1,13 @@
-package com.antarikshc.bluffpost.utils
+package com.antarikshc.news.utils
 
-import com.antarikshc.bluffpost.utils.DataFactory.randomString
-import com.antarikshc.bluffpost.utils.DataFactory.randomUuid
 import com.antarikshc.news.models.Author
+import com.antarikshc.news.utils.DataFactory.randomString
+import com.antarikshc.news.utils.DataFactory.randomUuid
 
 object AuthorFactory {
 
     fun randomAuthor(newsId: String = randomUuid()) =
-        com.antarikshc.news.models.Author(
+        Author(
             id = randomString(),
             newsId = newsId,
             title = randomString(),

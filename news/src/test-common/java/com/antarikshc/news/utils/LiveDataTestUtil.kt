@@ -1,4 +1,4 @@
-package com.antarikshc.bluffpost.utils
+package com.antarikshc.news.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
