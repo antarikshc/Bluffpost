@@ -7,6 +7,7 @@
     <fragment
         android:id="@+id/newsFragment"
         android:name="com.antarikshc.news.ui.NewsFragment"
-        android:label="NewsFragment" />
+        android:label="NewsFragment"
+        app:moduleName="news" />
 
 </navigation>
