@@ -1,9 +1,9 @@
 package com.antarikshc.bluffpost.ui
 
-import android.app.Application
 import com.antarikshc.bluffpost.di.DaggerAppComponent
+import com.google.android.play.core.splitcompat.SplitCompatApplication
 
-class BaseApplication : Application() {
+class BaseApplication : SplitCompatApplication() {
 
     val appComponent = DaggerAppComponent.factory().create(this)
 

@@ -1,0 +1,103 @@
+apply plugin: 'com.android.dynamic-feature'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+
+android {
+    compileSdkVersion Versions.compileSdk
+
+    defaultConfig {
+        minSdkVersion Versions.minSdk
+        targetSdkVersion Versions.targetSdk
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':app')
+
+    // Kotlin Standard lib
+    implementation Deps.kotlinStdLib
+
+    // AppCompat
+    implementation Deps.appCompat
+    implementation Deps.androidxCore
+
+    // Constraint Layout
+    implementation Deps.constraintLayout
+
+    // Fragments
+    implementation Deps.fragment
+
+    // RecyclerView
+    implementation Deps.recyclerView
+
+    // Jetpack Navigation
+    implementation Deps.navigation
+    implementation Deps.navigationUi
+    implementation Deps.navigationDynamicFeatures
+
+    // Jetpack Paging
+    implementation Deps.paging
+    implementation Deps.pagingKtx
+
+    // Coroutines
+    implementation Deps.coroutines
+    implementation Deps.coroutinesAndroid
+    testImplementation Deps.coroutinesTest
+
+    // Dagger2
+    implementation Deps.dagger
+    kapt Deps.daggerKapt
+
+    // LiveData and ViewModel
+    implementation Deps.lifecycleExt
+    implementation Deps.lifecycleRuntime
+    implementation Deps.lifecycleViewModel
+    implementation Deps.lifecycleLiveData
+    kapt Deps.lifecycleKapt
+
+    // Room
+    implementation Deps.room
+    implementation Deps.roomKtx
+    kapt Deps.roomKapt
+
+    // Retrofit + GSON
+    implementation Deps.retrofit
+    implementation Deps.retrofitGson
+
+    // Glide
+    implementation Deps.glide
+
+    // Test
+    testImplementation Deps.junit
+    androidTestImplementation Deps.androidxTestRunner
+    androidTestImplementation Deps.androidxTestRules
+    androidTestImplementation Deps.androidxCoreTest
+    androidTestImplementation Deps.androidxJunitExt
+    androidTestImplementation Deps.espressoCore
+}
